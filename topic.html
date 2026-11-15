@@ -471,6 +471,7 @@ html[data-theme="dark"] .topic-search-form,html[data-theme="dark"] .topic-source
     @media(max-width:620px){body{padding-bottom:72px}.medora-fixed-slogan{min-height:49px}.medora-fixed-slogan span{font-size:13px}.medora-fixed-slogan span:before,.medora-fixed-slogan span:after{width:20px}}
 
   </style>
+  <link rel="stylesheet" href="./skeletal-atlas.css">
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
   <script src="./supabase-config.js"></script>
 </head>
@@ -899,6 +900,7 @@ html[data-theme="dark"] .topic-search-form,html[data-theme="dark"] .topic-source
       const matchesTerm=(arr)=>medoraTextMatches(arr.join(' '),rawQuery);
       const regionMatches=Object.entries(regions).filter(([,r])=>matchesTerm([r.name,r.english,...r.terms])).slice(0,5);
       const organMatches=medoraOrganKnowledge.filter(o=>matchesTerm([o.name,o.english,...o.aliases]));
+      const skeletalMatches=window.medoraSkeletalAtlas?window.medoraSkeletalAtlas.search(rawQuery):[];
       const sourceMatches=evidenceSources.filter(r=>matchesTerm([r.title,r.titleAr,r.authors,r.authorsAr,r.publisher,r.publisherAr,r.summary,r.summaryAr,r.keywords,r.locatorAr])).slice(0,5);
       const specialityIndex=window.medoraSpecialtiesIndex||[];
       const specialtyMatches=specialityIndex.filter(item=>{
@@ -920,8 +922,20 @@ html[data-theme="dark"] .topic-search-form,html[data-theme="dark"] .topic-source
         html+='</div></section>';
       }
       if(sourceMatches.length){html+=`<section class="global-result-group"><div class="search-evidence-head"><h3>${en?'References behind the information':'المراجع التي تدعم المعلومة'}</h3><span>${en?'Curated Medora catalogue':'فهرس Medora المنتقى'}</span></div><div class="search-evidence-list">${sourceMatches.map(r=>medoraSourceCard(r,en)).join('')}</div><a class="inline-link" href="topic.html?q=%D9%85%D9%83%D8%AA%D8%A8%D8%A9%20%D8%A7%D9%84%D8%A3%D8%AF%D9%84%D8%A9%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9">${en?'Browse all curated references →':'استعرض كل المراجع في المكتبة ←'}</a></section>`;}
-      if(!organMatches.length&&!regionMatches.length&&!sourceMatches.length&&!specialtyMatches.length&&!mainMatches.length){html+=`<div class="evidence-empty"><h3>${en?'No match in the current Medora index':'لم نجد نتيجة مطابقة في فهرس Medora الحالي'}</h3><p>${en?'This prototype searches information and references already included in the site. It does not silently invent a summary or show unreviewed web results.':'النسخة الحالية تبحث داخل المعلومات والمراجع الموجودة في الموقع. لا نختلق ملخصًا ولا نعرض نتائج ويب غير مراجعة على أنها معتمدة.'}</p><p>${en?'Try a related term, a specialty name, or an English term.':'جرّب مصطلحًا قريبًا أو اسم تخصص أو اكتب المصطلح بالإنجليزية.'}</p><a class="inline-link" href="topic.html?q=%D8%A7%D9%84%D8%AA%D8%AE%D8%B5%D8%B5%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9">${en?'Browse the 88 specialty entries →':'تصفّح التخصصات الـ88 ←'}</a></div>`;}
+      if(!organMatches.length&&!regionMatches.length&&!sourceMatches.length&&!specialtyMatches.length&&!mainMatches.length&&!skeletalMatches.length){html+=`<div class="evidence-empty"><h3>${en?'No match in the current Medora index':'لم نجد نتيجة مطابقة في فهرس Medora الحالي'}</h3><p>${en?'This prototype searches information and references already included in the site. It does not silently invent a summary or show unreviewed web results.':'النسخة الحالية تبحث داخل المعلومات والمراجع الموجودة في الموقع. لا نختلق ملخصًا ولا نعرض نتائج ويب غير مراجعة على أنها معتمدة.'}</p><p>${en?'Try a related term, a specialty name, or an English term.':'جرّب مصطلحًا قريبًا أو اسم تخصص أو اكتب المصطلح بالإنجليزية.'}</p><a class="inline-link" href="topic.html?q=%D8%A7%D9%84%D8%AA%D8%AE%D8%B5%D8%B5%D8%A7%D8%AA%20%D8%A7%D9%84%D8%B7%D8%A8%D9%8A%D8%A9">${en?'Browse the 88 specialty entries →':'تصفّح التخصصات الـ88 ←'}</a></div>`;}
       searchResult.innerHTML=html;
+
+      if(skeletalMatches.length){
+        const skeletalBox=document.createElement('section');
+        skeletalBox.className='global-result-group global-skeletal-results';
+        skeletalBox.innerHTML='<h3>الجهاز الهيكلي والعظام</h3>'+skeletalMatches.map(function(hit){
+          const q=hit.type==='bone'?'bone:'+hit.id:hit.type==='system'?'الجهاز الهيكلي':(window.medoraSkeletalAtlas.categories.find(function(c){return c.id===hit.id;})||{}).name||hit.name;
+          const href='topic.html?q='+encodeURIComponent(q);
+          return '<a class="skeletal-search-hit" href="'+href+'"><span><b>'+hit.name+'</b><small dir="ltr">'+hit.en+'</small></span><small>'+(hit.type==='bone'?'عظمة · افتح النموذج والشرح':'قسم تشريحي · افتح النموذج الكامل')+'</small></a>';
+        }).join('');
+        searchResult.appendChild(skeletalBox);
+      }
+
       searchResult.querySelectorAll('[data-result-region]').forEach(b=>b.addEventListener('click',()=>{const rr=regions[b.dataset.resultRegion];if(rr)window.medoraNavigateToTopic(rr.name);}));
       searchResult.querySelectorAll('[data-save-organ]').forEach(b=>b.addEventListener('click',()=>{const o=medoraOrganKnowledge.find(x=>x.id===b.dataset.saveOrgan);if(o)saveGeneralItem({id:'organ-'+o.id,type:'موضوع طبي',title:o.name+' ('+o.english+')',subtitle:'معلومة طبية داخل Medora',description:o.summary,url:o.url});}));
       searchResult.querySelectorAll('[data-save-reference]').forEach(b=>b.addEventListener('click',()=>{const r=evidenceSources.find(x=>x.id===b.dataset.saveReference);if(r)saveGeneralItem({id:'reference-'+r.id,type:'مرجع طبي',title:r.titleAr||r.title,subtitle:(r.authorsAr||r.authors)+' · '+(r.yearAr||r.year||''),description:r.summaryAr||r.summary,url:r.fullText});}));
@@ -2298,5 +2312,6 @@ html[data-theme="dark"] .topic-search-form,html[data-theme="dark"] .topic-source
 })();
 </script>
 
+  <script type="module" src="./skeletal-atlas.js"></script>
 </body>
 </html>
