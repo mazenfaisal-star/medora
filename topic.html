@@ -1834,11 +1834,14 @@ html[data-theme="dark"] .topic-search-form,html[data-theme="dark"] .topic-source
     }
 
     if(part.id==='scrotum'){
-      return '<section class="anatomy-panel part-model-first"><h3>المجسم ثلاثي الأبعاد: كيس الصفن <small dir="ltr">(Scrotum)</small></h3><p>يفتح العارض على كيس الصفن داخل مرجع تشريحي للجسم. اضغط زر Isolate داخل العارض لعزل البنية وإخفاء بقية الطبقات.</p><div class="male-atlas-shell"><iframe title="Scrotum focused 3D anatomy" loading="lazy" allow="fullscreen; xr-spatial-tracking" src="https://bodyatlas.github.io/#part=scrotum&sex=male"></iframe></div><div class="topic-source-links"><a href="https://bodyatlas.github.io/parts/scrotum/" target="_blank" rel="noopener noreferrer">شرح الجزء ومصدره ↗</a><a href="https://bodyatlas.github.io/" target="_blank" rel="noopener noreferrer">فتح أطلس الجسم ↗</a></div><p class="model-accuracy-note">Body Atlas يصف نماذجه بأنها رسومات تشريحية مبسطة للتعلم وليست مسوحًا تشريحية طبية.</p></section>';
+      return '<section class="anatomy-panel part-model-first"><h3>المجسم التشريحي ثلاثي الأبعاد: كيس الصفن <small dir="ltr">(Scrotum)</small></h3><p>نموذج شامل للجهاز التناسلي الذكري يذكر كيس الصفن ضمن أجزائه. افتح العارض ودوّره لمراجعة موضع كيس الصفن بالنسبة إلى بقية الأعضاء؛ هذا العارض يعرض الجهاز ككل وليس mesh معزولًا لكيس الصفن.</p><div class="male-system-shell"><div class="sketchfab-embed-wrapper"><iframe title="Male genital system - includes scrotum" loading="lazy" frameborder="0" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking" src="https://sketchfab.com/models/0d54b936029a46e7b93637ac417c8283/embed"></iframe></div></div></section>';
     }
 
     if(part.id==='spermatic-cord'){
-      return '<section class="anatomy-panel part-model-first"><h3>الحبل المنوي <small dir="ltr">(Spermatic cord)</small></h3><div class="part-viewer-poster"><b>لم نعثر حتى الآن على مجسم مستقل موثّق ومرخّص للحبل المنوي وحده.</b><span>لم نستخدم نموذجًا مركبًا يحتوي على الخصيتين لأنك طلبت استبعاد نموذج الخصيتين. ستظل معلومات الجزء ومخططه التشريحي والمراجع ظاهرة، ويمكن إضافة مجسم مستقل لاحقًا عندما يتوفر مصدر مناسب.</span></div><div class="topic-source-links"><a href="https://www.ncbi.nlm.nih.gov/books/NBK538429/" target="_blank" rel="noopener noreferrer">مرجع تشريح ووظائف الجهاز التناسلي الذكري ↗</a></div></section>';
+      return '<section class="anatomy-panel part-model-first"><h3>المجسم التشريحي ثلاثي الأبعاد: الحبل المنوي <small dir="ltr">(Spermatic cord)</small></h3><p>وجدت نموذجًا مستقلًا أُنشئ بالتصوير المساحي لعينة تشريحية من كلية John A. Burns School of Medicine. صفحة Sketchfab لا تعرض ترخيص Creative Commons واضحًا في البيانات المتاحة؛ نستخدم العارض المستضاف فقط حاليًا، ويجب الحصول على إذن صاحب النموذج قبل أي استغلال تجاري أو تنزيل أو تعديل.</p><div class="male-system-shell"><div class="sketchfab-embed-wrapper"><iframe title="2623 Spermatic Cord 3D model" loading="lazy" frameborder="0" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking" src="https://sketchfab.com/models/4c3dca59c8fd4813b559f18b4a0d9939/embed"></iframe></div></div></section>';
+    }
+
+    return '<section class="anatomy-panel part-model-first"><h3>الحبل المنوي <small dir="ltr">(Spermatic cord)</small></h3><div class="part-viewer-poster"><b>لم نعثر حتى الآن على مجسم مستقل موثّق ومرخّص للحبل المنوي وحده.</b><span>لم نستخدم نموذجًا مركبًا يحتوي على الخصيتين لأنك طلبت استبعاد نموذج الخصيتين. ستظل معلومات الجزء ومخططه التشريحي والمراجع ظاهرة، ويمكن إضافة مجسم مستقل لاحقًا عندما يتوفر مصدر مناسب.</span></div><div class="topic-source-links"><a href="https://www.ncbi.nlm.nih.gov/books/NBK538429/" target="_blank" rel="noopener noreferrer">مرجع تشريح ووظائف الجهاز التناسلي الذكري ↗</a></div></section>';
     }
 
     return '<section class="anatomy-panel part-model-first"><h3>المجسم ثلاثي الأبعاد: '+title+' <small dir="ltr">('+en+')</small></h3><div class="part-viewer-poster"><b>لا يتوفر حاليًا نموذج مستقل موثّق لهذا الجزء.</b><span>لن نعرض شكلًا تخطيطيًا على أنه مجسم تشريحي حقيقي.</span></div></section>';
@@ -1972,6 +1975,42 @@ html[data-theme="dark"] .topic-search-form,html[data-theme="dark"] .topic-source
         <p>وجدت نموذج رئتين حقيقيًا يحتوي على الفصوص الخمسة كـ meshes منفصلة. افتح قائمة التراكيب داخل العارض واختر "${targetLabel}" لعزل الفص المطلوب.</p>
         <div class="sketchfab-cerebellum-shell"><div class="sketchfab-embed-wrapper">
           <iframe title="3D Lung Lobes Explorer" loading="lazy" allow="fullscreen; xr-spatial-tracking" src="https://sciencequest.in/tools/lungs-3d-explorer/"></iframe>
+        </div></div>
+      </section>`;
+    }
+    if(id==='alveoli'){
+      return `<section class="anatomy-panel part-model-first">
+        <h3>المجسم التشريحي ثلاثي الأبعاد: الحويصلات الهوائية</h3>
+        <p>نموذج ثلاثي الأبعاد يوضح الحويصلات الهوائية والشعيرات الدموية المحيطة بها وتبادل الغازات بينها. هو أقرب نموذج مخصص وجدته لهذا الجزء؛ يشرح الوحدة الوظيفية وتبادل الغازات، وليس كل الحويصلات الموجودة داخل الرئة.</p>
+        <div class="sketchfab-cerebellum-shell"><div class="sketchfab-embed-wrapper">
+          <iframe title="Gas exchanges in the lung - alveoli and capillaries" loading="lazy" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" src="https://sketchfab.com/models/1568521fd49b4b46bc9b2c99a024d700/embed"></iframe>
+        </div></div>
+      </section>`;
+    }
+    if(id==='bronchi'){
+      return `<section class="anatomy-panel part-model-first">
+        <h3>المجسم التشريحي ثلاثي الأبعاد: الشُّعب الهوائية</h3>
+        <p>نموذج الشجرة الرغامية القصبية من كلية الطب بجامعة تورنتو، صُمم لمحاكاة التنظير القصبي. يعرض القصبة والشعب وتفرعات الجيل الثالث؛ توجد نهايات موصلات تدريبية على بعض الشعب، لذلك هو نموذج تعليمي للتفرعات وليس نموذجًا كاملاً لأنسجة الرئة.</p>
+        <div class="sketchfab-cerebellum-shell"><div class="sketchfab-embed-wrapper">
+          <iframe title="Tracheobronchial tree 3D model" loading="lazy" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" src="https://sketchfab.com/models/d3cbd7d5adb74ba7b54c1df151900b96/embed"></iframe>
+        </div></div>
+      </section>`;
+    }
+    if(id==='bronchioles'){
+      return `<section class="anatomy-panel part-model-first">
+        <h3>المجسم التشريحي ثلاثي الأبعاد: القصيبات الهوائية</h3>
+        <p>هذا نموذج متخصص للقصيبات الهوائية، ويشمل القصيبات النهائية والتنفسية وبداية المنطقة المسؤولة عن تبادل الغازات، مع الحويصلات. صفحة المصدر تعرضه كنموذج متجر مدفوع؛ يمكن معاينته داخل العارض، لكن يجب شراء ترخيص الاستخدام المناسب أو الحصول على موافقة صاحب النموذج قبل إطلاق نسخة تجارية.</p>
+        <div class="sketchfab-cerebellum-shell"><div class="sketchfab-embed-wrapper">
+          <iframe title="Bronchioles and Alveoli Anatomy 3D model" loading="lazy" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" src="https://sketchfab.com/models/090405c7fcd8425ba2a0388dbe6bd002/embed"></iframe>
+        </div></div>
+      </section>`;
+    }
+    if(id==='diaphragm'){
+      return `<section class="anatomy-panel part-model-first">
+        <h3>المجسم التشريحي ثلاثي الأبعاد: الحجاب الحاجز</h3>
+        <p>نموذج مستقل للحجاب الحاجز البشري، يمكن تدويره وتكبيره داخل العارض.</p>
+        <div class="sketchfab-cerebellum-shell"><div class="sketchfab-embed-wrapper">
+          <iframe title="Human Diaphragm 3D model" loading="lazy" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" src="https://sketchfab.com/models/b62b76467c6948fbb735c78c0c428d65/embed"></iframe>
         </div></div>
       </section>`;
     }
