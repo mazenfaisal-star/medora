@@ -103,3 +103,42 @@ SUBMITTED BUT NOT INTEGRATED — RIGHTS OR ANATOMICAL MATCH DOES NOT FIT
 - Medical Model WP33 by MIRAI3D:
   https://sketchfab.com/3d-models/medical-model-wp33-bb4c54f56770467aaa9f06581b540eab
   The model page could not be inspected in this review and its generic title does not establish which anatomical part it depicts. Not assigned to the right upper lung lobe until the asset content and license are verified.
+
+
+ADDITIONAL SOURCE-BACKED PART MODELS — 15 NOVEMBER 2026
+1) Brain Explorer — ScienceQuest:
+   https://sciencequest.in/tools/brain-3d-explorer/
+   101 selectable brain structures, including frontal/parietal/temporal gyri, hippocampus, amygdala, thalamus, hypothalamus, brainstem structures, corpus callosum and cerebellum. The cortical lobe pages are represented by separately segmented gyri rather than one complete mesh per entire lobe. The cerebellum is one mesh and does not include folia/lobules/deep nuclei.
+   Source geometry: BodyParts3D, © The Database Center for Life Science, CC BY 4.0; converted and published by ScienceQuest under the same licence. The explorer describes the source as imaging of one adult male body.
+   Model page: https://sciencequest.in/tools/brain-3d-explorer/
+
+2) Heart Explorer — ScienceQuest:
+   https://sciencequest.in/tools/heart-3d-explorer/
+   Includes separately selectable tricuspid, mitral and pulmonary valves, papillary muscles, coronary arteries and cardiac veins. It explicitly does not include an aortic valve, chamber meshes, or great vessels beyond the coronary ostia. The heart wall is one mesh.
+   Source geometry: BodyParts3D, © The Database Center for Life Science, CC BY 4.0; converted and published by ScienceQuest under the same licence. One adult male anatomical specimen.
+   Model page: https://sciencequest.in/tools/heart-3d-explorer/
+
+3) Great Vessels Explorer — ScienceQuest:
+   https://sciencequest.in/tools/great-vessels-3d-explorer/
+   Includes a dedicated pulmonary artery mesh and a pulmonary vein mesh, with pulmonary artery segmentation extending into branches within both lungs. It is preferable to a pulmonary-trunk-only proxy for the pulmonary artery page.
+   Source geometry: BodyParts3D, © The Database Center for Life Science, CC BY 4.0; converted and published by ScienceQuest under the same licence. One adult male anatomical specimen.
+   Model page: https://sciencequest.in/tools/great-vessels-3d-explorer/
+
+4) Lungs and Bronchial Tree Explorer — ScienceQuest:
+   https://sciencequest.in/tools/lungs-3d-explorer/
+   Contains five separate lung-lobe meshes (right upper, middle, right lower, left upper and left lower), plus trachea, bronchus, pulmonary artery and pulmonary vein. The lobe names are individually selectable in the viewer. Bronchial and pulmonary vessel trees each form one mesh, not separate lobar/segmental meshes; fissures are gaps between lobe meshes, not meshes themselves. No diaphragm or heart is included.
+   Source geometry: BodyParts3D 3.0, © The Database Center for Life Science, CC BY 4.0; simplified, converted and published by ScienceQuest under the same licence. Based on MRI of one adult male volunteer and refined by medical illustrators.
+   Model page: https://sciencequest.in/tools/lungs-3d-explorer/
+
+5) OrganUI Heart — isolated meshes for the right atrium and right ventricular cavity:
+   Pinned GLB: https://cdn.jsdelivr.net/gh/organui/heart-3d@c72ce6654ff8e282942f97750d3104f55ef4fc3d/public/models/heart.glb
+   Repository: https://github.com/organui/heart-3d
+   Source: BodyParts3D 4.0, © The Database Center for Life Science, CC BY 4.0. Original work: Mitsuhashi et al., Nucleic Acids Research 37 (2009), D782–D785, DOI: https://doi.org/10.1093/nar/gkn613. Converted and grouped by OrganUI: selected meshes, triangulated, recentered/rescaled, axis transformed, normals recomputed, colored and converted to GLB. No additional anatomy was invented.
+   Important mapping limits: right-atrium is the atrial wall; the cavity is omitted. right-ventricle is the cavity surface, not ventricular muscle wall. The two ventricular walls are combined into one ventricular-wall mesh in the source. The pulmonary-trunk node is present, but its left/right pulmonary artery trees are not; Medora uses the better-coverage ScienceQuest pulmonary artery mesh for the pulmonary artery page.
+   Required credit: "BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International; selected and converted by OrganUI (https://github.com/organui/heart-3d)." Indicate the conversion/modification.
+
+6) Aortic Valve — Sketchfab by maalek:
+   Model page: https://sketchfab.com/3d-models/aortic-valve-691b7d3a05ee4452a8e0a65cd0feac18
+   Embed: https://sketchfab.com/models/691b7d3a05ee4452a8e0a65cd0feac18/embed
+   License displayed: CC Attribution. Model description states it is one-sixth of an open aortic valve. It is only a partial geometric segment, not a full valve. Used as a partial 3D illustration for the aortic-valve page.
+   Keep creator credit, source link and CC Attribution licence in this central record.
