@@ -181,14 +181,14 @@
     const q = normalize(raw);
     if (!q) return null;
     let found = boneRecords.find(function (bone) {
-      const vertebra = bone.id.match(/^VERTEBRA_([CTL]\\d+)$/);
+      const vertebra = bone.id.match(/^VERTEBRA_([CTL]\d+)$/);
       return normalize(bone.name) === q || normalize(bone.en) === q || normalize(bone.id) === q ||
         !!(vertebra && normalize(vertebra[1]) === q);
     });
     if (found) return found;
-    if (q.length < 5) return null;
+    if (q.length < 2) return null;
     const hits = boneRecords.filter(function (bone) {
-      const vertebra = bone.id.match(/^VERTEBRA_([CTL]\\d+)$/);
+      const vertebra = bone.id.match(/^VERTEBRA_([CTL]\d+)$/);
       return [bone.name, bone.en, bone.id, vertebra ? vertebra[1] : ''].some(function (term) {
         const n = normalize(term);
         return n.length >= 3 && (n.includes(q) || q.includes(n));
@@ -209,7 +209,7 @@
       }
     });
     boneRecords.filter(function (bone) {
-      const vertebra = bone.id.match(/^VERTEBRA_([CTL]\\d+)$/);
+      const vertebra = bone.id.match(/^VERTEBRA_([CTL]\d+)$/);
       return [bone.name, bone.en, bone.id, vertebra ? vertebra[1] : ''].some(function (term) {
         const n = normalize(term);
         return !!n && (n === q || (q.length >= 2 && n.includes(q)));
@@ -506,7 +506,7 @@
     const q = normalize(query);
     if (q.length >= 3) {
       const partialHits = boneRecords.filter(function (entry) {
-        const vertebra = entry.id.match(/^VERTEBRA_([CTL]\\d+)$/);
+        const vertebra = entry.id.match(/^VERTEBRA_([CTL]\d+)$/);
         return [entry.name,entry.en,entry.id,vertebra ? vertebra[1] : ''].some(function (term) {
           const n = normalize(term);
           return n.length >= 3 && n.includes(q);
