@@ -142,3 +142,39 @@ ADDITIONAL SOURCE-BACKED PART MODELS — 15 NOVEMBER 2026
    Embed: https://sketchfab.com/models/691b7d3a05ee4452a8e0a65cd0feac18/embed
    License displayed: CC Attribution. Model description states it is one-sixth of an open aortic valve. It is only a partial geometric segment, not a full valve. Used as a partial 3D illustration for the aortic-valve page.
    Keep creator credit, source link and CC Attribution licence in this central record.
+
+
+ADDITIONAL RESPIRATORY AND MALE-REPRODUCTIVE MODEL REFERENCES — 15 NOVEMBER 2026
+1) Alveoli / gas exchange — "Gas exchanges in the lung" by BrainStation (@Sohila.Lotfy).
+   Model page: https://sketchfab.com/3d-models/gas-exchanges-in-the-lung-1568521fd49b4b46bc9b2c99a024d700
+   Embed: https://sketchfab.com/models/1568521fd49b4b46bc9b2c99a024d700/embed
+   The model description says the alveoli are surrounded by capillaries and illustrates oxygen moving into blood and carbon dioxide moving into alveolar air.
+   License: CC Attribution (CC BY). Credit BrainStation and Sketchfab; follow the licence/source link.
+
+2) Bronchi — "Tracheobronchial tree" by CVEC.
+   Model page: https://sketchfab.com/3d-models/tracheobronchial-tree-d3cbd7d5adb74ba7b54c1df151900b96
+   Embed: https://sketchfab.com/models/d3cbd7d5adb74ba7b54c1df151900b96/embed
+   Designed as a bronchoscopy simulator, with airway branches and training connectors at selected third-generation bronchi.
+   License: CC Attribution (CC BY). Credit CVEC and Sketchfab.
+
+3) Bronchioles — "Bronchioles and Alveoli Anatomy" by Nima (@h3ydari96).
+   Model page: https://sketchfab.com/3d-models/bronchioles-and-alveoli-anatomy-090405c7fcd8425ba2a0388dbe6bd002
+   Embed: https://sketchfab.com/models/090405c7fcd8425ba2a0388dbe6bd002/embed
+   The model description identifies terminal and respiratory bronchioles and their transition toward alveolar gas-exchange units. The Sketchfab page is presented as a store / paid-model listing and contains a NoAI restriction; no Creative Commons licence is displayed in the inspected metadata. Medora embeds only the hosted viewer. Obtain the correct commercial licence or explicit permission before commercial launch; do not use the asset to train or develop generative AI.
+
+4) Diaphragm — "Human Diaphragm" by Devden.
+   Model page: https://sketchfab.com/3d-models/human-diaphragm-b62b76467c6948fbb735c78c0c428d65
+   Embed: https://sketchfab.com/models/b62b76467c6948fbb735c78c0c428d65/embed
+   The source describes a realistic-looking human diaphragm with textures.
+   License: CC Attribution (CC BY). Credit Devden and Sketchfab.
+
+5) Scrotum — "male genital system" by Ahmed moamen (@ahmed17).
+   Model page: https://sketchfab.com/3d-models/male-genital-system-0d54b936029a46e7b93637ac417c8283
+   Embed: https://sketchfab.com/models/0d54b936029a46e7b93637ac417c8283/embed
+   The source description explicitly lists the scrotum among the modeled structures, with penis, testes, epididymis, vas deferens, seminal vesicles, prostate and urethra. This is a whole-system context model, not a single isolated scrotum mesh.
+   License: CC Attribution (CC BY). Credit Ahmed moamen and Sketchfab.
+
+6) Spermatic cord — "2623_SpermaticCord" by John A Burns School of Medicine.
+   Model page: https://sketchfab.com/3d-models/2623-spermaticcord-4c3dca59c8fd4813b559f18b4a0d9939
+   Embed: https://sketchfab.com/models/4c3dca59c8fd4813b559f18b4a0d9939/embed
+   Source notes: concept/dissection S Lozanoff; photogrammetry by intern; edit by intern; upload/final edit by J Thompson. No Creative Commons licence was visible in the publicly indexed metadata reviewed. This is embedded through the Sketchfab hosted viewer only; obtain written permission / appropriate commercial rights before monetized use or any download/modification.
