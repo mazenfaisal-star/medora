@@ -16,6 +16,8 @@
 .skeletal-card-copy em{font-style:normal;font-size:10px;color:var(--green,#199c85)}
 .skeletal-arrow{flex:0 0 auto;color:var(--blue,#1677bd);font-size:17px}
 .skeletal-viewer-wrap{margin-top:14px}
+.skeletal-external-viewer{position:relative;width:100%;height:460px;overflow:hidden;border:1px solid var(--line,#dce8f7);border-radius:16px;background:#eef4fb;margin-top:14px}
+.skeletal-external-viewer iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .skeletal-viewer{position:relative;width:100%;height:440px;overflow:hidden;border:1px solid var(--line,#dce8f7);border-radius:16px;background:radial-gradient(circle at 50% 36%,#fff,#e8f0fa)}
 .skeletal-viewer canvas{display:block;width:100%;height:100%;touch-action:none;outline:none}
 .skeletal-viewer-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;height:100%;padding:20px;text-align:center;color:#536d89}
@@ -46,12 +48,13 @@
 .global-skeletal-results .skeletal-search-hit b{font-size:12px}
 .global-skeletal-results .skeletal-search-hit small{font-size:10px;color:var(--muted,#71869e)}
 html[data-theme="dark"] .skeletal-viewer{background:radial-gradient(circle at 50% 35%,#24364b,#121f2e)}
-html[data-theme="dark"] .skeletal-full-model{background:#111f2e}
+html[data-theme="dark"] .skeletal-full-model,html[data-theme="dark"] .skeletal-external-viewer{background:#111f2e}
 html[data-theme="dark"] .skeletal-model-note{background:rgba(60,130,190,.13);color:#b6c8dc}
 @media(max-width:650px){
  .skeletal-page-intro,.skeletal-sections-panel,.skeletal-bones-panel{padding:12px;border-radius:14px}
  .skeletal-category-grid,.skeletal-bone-grid{grid-template-columns:1fr}
  .skeletal-viewer{height:350px}
  .skeletal-full-model{height:350px}
+ .skeletal-external-viewer{height:390px}
  .skeletal-viewer-tools{align-items:flex-start}
 }
