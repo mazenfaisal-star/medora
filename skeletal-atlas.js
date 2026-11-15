@@ -8,10 +8,38 @@
   const MANIFEST_URL = 'https://bonehub.github.io/Educational-Atlas/data/manifest.json';
   const HF_DATASET = 'https://huggingface.co/datasets/BoneHub/visible-human-3d-models/resolve/';
   const SUBJECT_ID = '01_Male';
+
+  // Skull bones use the Anatomio / Z-Anatomy regional model so the cranial and facial bones
+  // are individually selectable, rather than relying on the grouped skull meshes in BoneHub.
+  const skullBones = [
+    {id:'SKULL_FRONTAL',name:'العظم الجبهي',en:'Frontal bone',slug:'frontal-bone',summary:'يشكّل العظم الجبهي الجبهة وجزءًا من سقف الحجاج وأرضية الجزء الأمامي من القحف.',function:'يساهم في حماية الفصوص الجبهية من الدماغ، وفي تكوين حدود الحجاج وتجويف الأنف.'},
+    {id:'SKULL_OCCIPITAL',name:'العظم القذالي',en:'Occipital bone',slug:'occipital-bone',summary:'يشكّل العظم القذالي الجزء الخلفي والسفلي من القحف، ويحيط بالثقبة العظمى.',function:'يساهم في حماية الجزء الخلفي من الدماغ واتصال الجمجمة بالعمود الفقري.'},
+    {id:'SKULL_SPHENOID',name:'العظم الوتدي',en:'Sphenoid bone',slug:'sphenoid-bone',summary:'عظم مركزي في قاعدة الجمجمة، وله أجنحة وتراكيب تشارك في تكوين الحجاج.',function:'يربط أجزاء متعددة من قاعدة القحف، ويحتوي على السرج التركي الذي يستوعب الغدة النخامية.'},
+    {id:'SKULL_ETHMOID',name:'العظم الغربالي',en:'Ethmoid bone',slug:'ethmoid-bone',summary:'يقع العظم الغربالي بين الحجاجين، ويساهم في تكوين سقف التجويف الأنفي وجزء من الجدار الإنسي للحجاج.',function:'يدعم تراكيب التجويف الأنفي، ويمر عبر ثقوبه عدد من ألياف العصب الشمي.'},
+    {id:'SKULL_MANDIBLE',name:'عظم الفك السفلي',en:'Mandible',slug:'mandible',summary:'يشكّل الفك السفلي ويحمل الأسنان السفلية، ويتصل بالعظم الصدغي عبر المفصل الصدغي الفكي.',function:'يتحرك أثناء المضغ والكلام، ويوفر مواضع ارتباط لعضلات المضغ.'},
+    {id:'SKULL_VOMER',name:'عظم المِحراث',en:'Vomer',slug:'vomer',summary:'عظم رقيق يقع في الجزء الخلفي السفلي من الحاجز الأنفي العظمي.',function:'يساهم في فصل التجويف الأنفي إلى ممرين أيمن وأيسر.'},
+    {id:'SKULL_PARIETAL_LEFT',name:'العظم الجداري الأيسر',en:'Left parietal bone',slug:'left-parietal-bone',summary:'أحد العظمين الجداريين اللذين يشكّلان جزءًا كبيرًا من سقف وجانبي القحف.',function:'يساهم في إحاطة الدماغ وحمايته وتكوين جدار القحف العلوي والجانبي.'},
+    {id:'SKULL_PARIETAL_RIGHT',name:'العظم الجداري الأيمن',en:'Right parietal bone',slug:'right-parietal-bone',summary:'أحد العظمين الجداريين اللذين يشكّلان جزءًا كبيرًا من سقف وجانبي القحف.',function:'يساهم في إحاطة الدماغ وحمايته وتكوين جدار القحف العلوي والجانبي.'},
+    {id:'SKULL_TEMPORAL_LEFT',name:'العظم الصدغي الأيسر',en:'Left temporal bone',slug:'left-temporal-bone',summary:'يقع في الجانب السفلي الوحشي من القحف ويحتوي على أجزاء مرتبطة بتراكيب السمع والاتزان.',function:'يساهم في حماية الأذن الوسطى والداخلية وتكوين جزء من المفصل الصدغي الفكي.'},
+    {id:'SKULL_TEMPORAL_RIGHT',name:'العظم الصدغي الأيمن',en:'Right temporal bone',slug:'right-temporal-bone',summary:'يقع في الجانب السفلي الوحشي من القحف ويحتوي على أجزاء مرتبطة بتراكيب السمع والاتزان.',function:'يساهم في حماية الأذن الوسطى والداخلية وتكوين جزء من المفصل الصدغي الفكي.'},
+    {id:'SKULL_ZYGOMATIC_LEFT',name:'العظم الوجني الأيسر',en:'Left zygomatic bone',slug:'left-zygomatic-bone',summary:'يشكّل العظم الوجني بروز الخد ويساهم في تكوين الجدار الوحشي وأرضية الحجاج.',function:'يساهم في حماية العين وتوفير مواضع اتصال لعضلات الوجه.'},
+    {id:'SKULL_ZYGOMATIC_RIGHT',name:'العظم الوجني الأيمن',en:'Right zygomatic bone',slug:'right-zygomatic-bone',summary:'يشكّل العظم الوجني بروز الخد ويساهم في تكوين الجدار الوحشي وأرضية الحجاج.',function:'يساهم في حماية العين وتوفير مواضع اتصال لعضلات الوجه.'},
+    {id:'SKULL_LACRIMAL_LEFT',name:'العظم الدمعي الأيسر',en:'Left lacrimal bone',slug:'left-lacrimal-bone',summary:'عظم صغير في الجدار الإنسي للحجاج، بالقرب من جهاز تصريف الدموع.',function:'يساهم في تكوين الحفرة الدمعية التي تستوعب أجزاء من كيس الدمع.'},
+    {id:'SKULL_LACRIMAL_RIGHT',name:'العظم الدمعي الأيمن',en:'Right lacrimal bone',slug:'right-lacrimal-bone',summary:'عظم صغير في الجدار الإنسي للحجاج، بالقرب من جهاز تصريف الدموع.',function:'يساهم في تكوين الحفرة الدمعية التي تستوعب أجزاء من كيس الدمع.'},
+    {id:'SKULL_NASAL_LEFT',name:'العظم الأنفي الأيسر',en:'Left nasal bone',slug:'left-nasal-bone',summary:'أحد عظمي جسر الأنف، ويقع في الجزء العلوي من الهيكل العظمي للأنف.',function:'يساهم مع العظم الأنفي المقابل والغضاريف المجاورة في دعم جسر الأنف.'},
+    {id:'SKULL_NASAL_RIGHT',name:'العظم الأنفي الأيمن',en:'Right nasal bone',slug:'right-nasal-bone',summary:'أحد عظمي جسر الأنف، ويقع في الجزء العلوي من الهيكل العظمي للأنف.',function:'يساهم مع العظم الأنفي المقابل والغضاريف المجاورة في دعم جسر الأنف.'},
+    {id:'SKULL_MAXILLA_LEFT',name:'الفك العلوي الأيسر',en:'Left maxilla',slug:'left-maxilla',summary:'يساهم الفك العلوي في تكوين منتصف الوجه، وأرضية الحجاج، وجزء من الحنك الصلب والتجويف الأنفي.',function:'يحمل الأسنان العلوية ويساهم في المضغ والكلام وتكوين ممرات الهواء والجيوب الفكية.'},
+    {id:'SKULL_MAXILLA_RIGHT',name:'الفك العلوي الأيمن',en:'Right maxilla',slug:'right-maxilla',summary:'يساهم الفك العلوي في تكوين منتصف الوجه، وأرضية الحجاج، وجزء من الحنك الصلب والتجويف الأنفي.',function:'يحمل الأسنان العلوية ويساهم في المضغ والكلام وتكوين ممرات الهواء والجيوب الفكية.'},
+    {id:'SKULL_PALATINE_LEFT',name:'العظم الحنكي الأيسر',en:'Left palatine bone',slug:'left-palatine-bone',summary:'يساهم العظم الحنكي في تكوين الجزء الخلفي من الحنك الصلب وجزء من أرضية وجدار التجويف الأنفي.',function:'يفصل جزئيًا بين التجويفين الأنفي والفموي ويدعم بنية الحنك.'},
+    {id:'SKULL_PALATINE_RIGHT',name:'العظم الحنكي الأيمن',en:'Right palatine bone',slug:'right-palatine-bone',summary:'يساهم العظم الحنكي في تكوين الجزء الخلفي من الحنك الصلب وجزء من أرضية وجدار التجويف الأنفي.',function:'يفصل جزئيًا بين التجويفين الأنفي والفموي ويدعم بنية الحنك.'},
+    {id:'SKULL_INFERIOR_NASAL_CONCHA_LEFT',name:'المحارة الأنفية السفلية اليسرى',en:'Left inferior nasal concha',slug:'left-inferior-nasal-concha',summary:'عظم مستقل ملتف على الجدار الوحشي للتجويف الأنفي.',function:'يزيد مساحة السطح المخاطي ويساهم في توجيه وتدفئة وترطيب الهواء المستنشق.'},
+    {id:'SKULL_INFERIOR_NASAL_CONCHA_RIGHT',name:'المحارة الأنفية السفلية اليمنى',en:'Right inferior nasal concha',slug:'right-inferior-nasal-concha',summary:'عظم مستقل ملتف على الجدار الوحشي للتجويف الأنفي.',function:'يزيد مساحة السطح المخاطي ويساهم في توجيه وتدفئة وترطيب الهواء المستنشق.'}
+  ];
+
   const FULL_SKELETON_MODEL = 'https://sketchfab.com/models/d04e251ee8a242fcb57db58f3989def4/embed';
 
   const categories = [
-    {id:'skull', name:'عظام الجمجمة والوجه', en:'Skull and facial bones', aliases:['الجمجمة','عظام الجمجمة','عظام الوجه','skull','facial bones','skull bones'], regionIds:['SKULL'], description:'تحيط الجمجمة بالدماغ وتكوّن هيكل الوجه، وتوفر نقاط ارتكاز لعضلات الوجه والمضغ وتحمي تراكيب حسية مهمة.', note:'حدود المصدر: ملف الجمجمة يجمع عظام القحف مع الفك العلوي في نموذج واحد، بينما الفك السفلي نموذج منفصل. لم تُقسّم العظام الوجهية الصغيرة كل واحدة على حدة في مجموعة البيانات الحالية.'},
+    {id:'skull', name:'عظام الجمجمة والوجه', en:'Skull and facial bones', aliases:['الجمجمة','عظام الجمجمة','عظام الوجه','skull','facial bones','skull bones'], regionIds:['SKULL'], description:'تحيط الجمجمة بالدماغ وتكوّن هيكل الوجه، وتوفر نقاط ارتكاز لعضلات الوجه والمضغ وتحمي تراكيب حسية مهمة.', note:'يعرض هذا القسم نموذج Z-Anatomy الذي يتيح اختيار 22 عظمة من عظام القحف والوجه بصورة منفصلة. الأسنان والأقراص المفصلية تظهر في سياق العارض لكنها ليست عظامًا إضافية. بيانات النموذج تشير إلى أن مواضع بعض التلامسات المفصلية ما زالت بحاجة إلى مراجعة متخصصة.'},
     {id:'spine', name:'العمود الفقري والفقرات', en:'Vertebral column and vertebrae', aliases:['العمود الفقري','العمود الفقرى','الفقرات','فقرات','spine','spinal column','vertebral column','vertebrae'], regionIds:['SPINAL_COLUMN'], description:'يمتد العمود الفقري من قاعدة الجمجمة إلى الحوض. يدعم الرأس والجذع، ويسمح بالحركة، ويحيط بالقناة الفقرية التي يمر داخلها الحبل الشوكي.', note:'تُعرض الفقرات المتاحة كعظام منفصلة داخل النموذج الإقليمي، بينما يظهر العجز مع العصعص كتركيب واحد في هذا المصدر.'},
     {id:'thorax', name:'القفص الصدري والأضلاع', en:'Thoracic cage and ribs', aliases:['القفص الصدري','الأضلاع','الاضلاع','الضلوع','عظام الصدر','thorax','rib cage','ribs','sternum'], regionIds:['THORAX'], description:'يتكوّن القفص الصدري العظمي من الأضلاع وعظم القص والفقرات الصدرية. يساهم في حماية القلب والرئتين ويدعم حركة التنفس.', note:'يحتوي النموذج على الأضلاع وعظم القص. الغضاريف الضلعية غير موجودة في ملفات العظام، لذلك قد لا يظهر اتصال عظمي مباشر بين نهايات الأضلاع والقص.'},
     {id:'upper-limb', name:'الحزام الكتفي وعظام الذراع واليد', en:'Shoulder girdle, arm and hand bones', aliases:['الحزام الكتفي','عظام الذراع','عظام اليد','الطرف العلوي','الاطراف العلوية','upper limb','upper extremity','shoulder girdle','arm bones','hand bones'], regionIds:['UPPER_EXTREMITY_LEFT','UPPER_EXTREMITY_RIGHT','HAND_LEFT','HAND_RIGHT'], description:'يربط الحزام الكتفي الطرف العلوي بالجذع، وتعمل عظام الذراع والساعد واليد معًا لتوفير مدى واسع من الحركة والإمساك والمهارات الدقيقة.', note:'تُعرض عظام اليد ضمن المجموعة نفسها لتسهيل التصفح. في بعض ملفات المصدر تُجمع سلاميات كل إصبع في نموذج واحد بدل فصل السلامية القريبة والوسطى والبعيدة كل واحدة على حدة.'},
@@ -86,6 +114,8 @@
   };
 
   const boneInfo = function (id) {
+    const skullBone = skullBones.find(function (bone) { return bone.id === id; });
+    if (skullBone) return {summary:skullBone.summary,function:skullBone.function};
     if (/^VERTEBRA_C/.test(id)) return {summary:'فقرة من المنطقة العنقية في أعلى العمود الفقري. تشارك الفقرات العنقية في دعم الرأس والسماح بحركته، مع حماية الجزء العلوي من الحبل الشوكي.', function:'تتصل الفقرة بالفقرات المجاورة عبر المفاصل والأقراص بين الفقرات في المستويات المتحركة.'};
     if (/^VERTEBRA_T/.test(id)) return {summary:'فقرة من المنطقة الصدرية، وترتبط بها الأضلاع لتكوين الجزء الخلفي من القفص الصدري.', function:'تساعد على دعم الجذع وتوفير نقاط اتصال للأضلاع، مع حماية الحبل الشوكي.'};
     if (/^VERTEBRA_L/.test(id)) return {summary:'فقرة من المنطقة القطنية في أسفل الظهر، وهي منطقة تتحمل جزءًا كبيرًا من أحمال الجذع.', function:'تدعم وزن الجزء العلوي من الجسم وتساهم في حركات الثني والتمدد.'};
@@ -129,12 +159,13 @@
 
   const recordsForCategory = function (category, data) {
     const out = [];
+    if (category.id === 'skull') return skullBones.map(function (bone) { return {id:bone.id,regionId:'ANATOMIO_SKULL',name:bone.name,en:bone.en,categoryId:category.id,sourceType:'anatomio',slug:bone.slug}; });
     data.regions.forEach(function (region) {
       region.bones.forEach(function (bone) {
         if (!bone.files || !bone.files[SUBJECT_ID] || bone.files[SUBJECT_ID].stl === undefined) return;
         const id = bone.id;
         let include = false;
-        if (category.id === 'skull') include = region.id === 'SKULL';
+        if (category.id === 'skull') include = false;
         if (category.id === 'spine') include = region.id === 'SPINAL_COLUMN';
         if (category.id === 'thorax') include = region.id === 'THORAX';
         if (category.id === 'upper-limb') include = ['UPPER_EXTREMITY_LEFT','UPPER_EXTREMITY_RIGHT','HAND_LEFT','HAND_RIGHT'].indexOf(region.id) >= 0;
@@ -261,6 +292,7 @@
   };
 
   const makeViewerMarkup = function (kind, id) {
+    if (kind === 'category' && id === 'skull') return '<div class="skeletal-external-viewer"><iframe title="Skull bones — 22 individually selectable structures" loading="lazy" allow="fullscreen; xr-spatial-tracking" src="https://anatomio.org/en/human/skull/"></iframe></div><p class="skeletal-credit">عارض Z-Anatomy عبر Anatomio · 22 عظمة قحفية ووجهية قابلة للاختيار والعزل. الترخيص CC BY-SA 4.0. <a href="https://anatomio.org/en/human/skull/" target="_blank" rel="noopener noreferrer">فتح العارض الأصلي ↗</a></p>';
     return '<div class="skeletal-viewer-wrap"><div class="skeletal-viewer" data-skeletal-viewer data-view-kind="' + kind + '" data-view-id="' + id + '">' +
       '<div class="skeletal-viewer-loading"><b>جارٍ تجهيز النموذج التشريحي…</b><span>يتم تحميل ملفات العظام عند فتح هذه الصفحة فقط.</span></div></div>' +
       '<div class="skeletal-viewer-tools"><button type="button" data-skeletal-reset>إعادة ضبط العرض</button><button type="button" data-skeletal-rotate>إيقاف الدوران</button><span data-skeletal-status role="status">يتطلب عرض المجسم اتصالًا بالإنترنت.</span></div></div>';
@@ -332,9 +364,12 @@
     const content = document.getElementById('topicContent');
     if (!content) return;
     pageTitle(bone.name, bone.en + ' — نموذج ثلاثي الأبعاد مستقل وشرح تشريحي مختصر.');
+    const individualModel = bone.sourceType === 'anatomio'
+      ? '<div class="skeletal-external-viewer"><iframe title="' + bone.en + ' — interactive 3D model" loading="lazy" allow="fullscreen; xr-spatial-tracking" src="https://anatomio.org/en/human/skull/structures/' + bone.slug + '/"></iframe></div><p class="skeletal-credit">نموذج تشريحي مستقل من Z-Anatomy عبر Anatomio · CC BY-SA 4.0. <a href="https://anatomio.org/en/human/skull/structures/' + bone.slug + '/" target="_blank" rel="noopener noreferrer">فتح صفحة العظمة الأصلية ↗</a></p>'
+      : makeViewerMarkup('bone', bone.id);
     content.innerHTML =
       '<section class="skeletal-page-intro"><span class="topic-kicker">عظمة منفردة · ' + category.name + '</span><h2>' + bone.name + ' <small dir="ltr">' + bone.en + '</small></h2>' +
-      makeViewerMarkup('bone', bone.id) +
+      individualModel +
       '<article class="topic-summary-card skeletal-bone-detail"><h3>التعريف والموقع</h3><p>' + info.summary + '</p><h3>الوظيفة</h3><p>' + info.function + '</p>' +
       (bone.id === 'SKULL_CRANIAL_MAXILLA' || bone.id === 'SACRUM' || /^PHALANGE_/.test(bone.id) ? '<div class="skeletal-model-note">ملحوظة حول تقسيم المصدر: ' + (bone.id === 'SKULL_CRANIAL_MAXILLA' ? 'هذا الملف يجمع عظام القحف والفك العلوي؛ لا يعرضها كعظام منفصلة.' : bone.id === 'SACRUM' ? 'هذا الملف يجمع العجز والعصعص في نموذج واحد.' : 'ملف هذا الإصبع يجمع سلامياته ولا يفصل كل سلامية منفردة.') + '</div>' : '') +
       '<div class="skeletal-navigation"><a href="' + topicUrl(category.name) + '">العودة إلى ' + category.name + ' ↗</a><a href="' + topicUrl('الجهاز الهيكلي') + '">كل أقسام الجهاز الهيكلي ↗</a></div></article></section>' +
