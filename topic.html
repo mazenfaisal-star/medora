@@ -1741,96 +1741,23 @@ html[data-theme="dark"] .topic-search-form,html[data-theme="dark"] .topic-source
     host._medoraPart3dCleanup=()=>{disposed=true;ro.disconnect();cancelAnimationFrame(raf);controls.dispose();renderer.dispose();const geometries=new Set(),materials=new Set();root.traverse(obj=>{if(obj.isMesh){if(obj.geometry)geometries.add(obj.geometry);const mats=Array.isArray(obj.material)?obj.material:[obj.material];mats.forEach(m=>m&&materials.add(m));}});geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());};
   }
   async function renderStandaloneAnatomyPart(host){
-    const [THREE,controlsMod]=await Promise.all([import('https://cdn.jsdelivr.net/npm/three@0.170.0/+esm'),import('https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/controls/OrbitControls.js/+esm')]);const {OrbitControls}=controlsMod;
-    const part=anatomyPartCatalog.find(p=>p.id===host.dataset.partId)||(()=>{const r=regions[host.dataset.regionKey];return r?{id:host.dataset.regionKey,parent:'brain',regionKey:host.dataset.regionKey,name:r.name,en:r.english,diagram:'brain'}:null;})();if(!part)throw new Error('part metadata unavailable');
-    if(part.parent==='male-reproductive'&&malePartMeshTargets[part.id]){await renderMaleReproductivePart3D(host,part,THREE,OrbitControls);return;}
-    host.innerHTML='<canvas aria-label="مجسم ثلاثي الأبعاد مستقل للجزء التشريحي"></canvas><div class="standalone-model-note" role="status">مجسم تعليمي مبسّط خاص بالجزء المحدد، وليس إعادة عرض للعضو كاملًا.</div><div class="standalone-model-controls"><button type="button" data-part3d-reset>إعادة ضبط</button><button type="button" data-part3d-rotate>إيقاف الدوران</button></div>';
-    const canvas=host.querySelector('canvas'),note=host.querySelector('.standalone-model-note');const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.7));renderer.setClearColor(0x000000,0);
-    const scene=new THREE.Scene();scene.add(new THREE.HemisphereLight(0xffffff,0x77869b,1.8));const key=new THREE.DirectionalLight(0xffffff,2.1);key.position.set(4,5,7);scene.add(key);const fill=new THREE.DirectionalLight(0x8bbdff,1.0);fill.position.set(-4,1,-3);scene.add(fill);
-    const camera=new THREE.PerspectiveCamera(37,1,.01,300);const controls=new OrbitControls(camera,canvas);controls.enableDamping=true;controls.autoRotate=true;controls.autoRotateSpeed=1.0;controls.minDistance=1.5;controls.maxDistance=30;
-    const root=new THREE.Group();scene.add(root);
-    const mat=(color,roughness=.5)=>new THREE.MeshStandardMaterial({color,roughness,metalness:.02});
-    const colors={frontal:0x368bcf,parietal:0x38bca9,temporal:0xe8ad52,occipital:0x8c79d9,cerebellum:0xd878b8,brainstem:0xc77d5d,hippocampus:0x57a8bd,amygdala:0xd78375,thalamus:0x9075ca,hypothalamus:0x61b69e,'corpus-callosum':0xd5e1ed,'left-atrium':0xd96c80,'right-atrium':0xd87587,'left-ventricle':0xc94c61,'right-ventricle':0xe17a78,'mitral-valve':0xe1a5ae,'tricuspid-valve':0xe9b0ba,'aortic-valve':0xd7808e,'pulmonary-valve':0xe6a1a7,aorta:0xbd4055,'pulmonary-artery':0x5f99c9,'pulmonary-veins':0xc96f87,'right-upper-lobe':0xe6a2a7,'right-middle-lobe':0xd98592,'right-lower-lobe':0xc87588,'left-upper-lobe':0xe3a0a9,'left-lower-lobe':0xca788b,alveoli:0x66b9d9,bronchi:0x5a9cbe,bronchioles:0x75b6cd,diaphragm:0x9ebf8f};
-    const color=colors[part.id]||0x5a9cc8;
-    function blob(position,scale,colorValue,seed=0){const g=new THREE.SphereGeometry(1,40,28);const pos=g.attributes.position;for(let i=0;i<pos.count;i++){const x=pos.getX(i),y=pos.getY(i),z=pos.getZ(i);const wave=1+.045*Math.sin((x*4+y*3+z*2+seed)*2.4)+.022*Math.sin((z*7-y*4+seed)*3.1);pos.setXYZ(i,x*wave,y*wave,z*wave);}g.computeVertexNormals();const mesh=new THREE.Mesh(g,mat(colorValue));mesh.scale.set(scale[0],scale[1],scale[2]);mesh.position.set(position[0],position[1],position[2]);root.add(mesh);return mesh;}
-    function tube(points,radius,colorValue){const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(...p)));const mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,40,radius,10,false),mat(colorValue));root.add(mesh);return mesh;}
-    function grooveRows(target,rows,colorValue=0x8f9db0){const c=mat(colorValue,.75);rows.forEach((z,i)=>{const pts=[];for(let j=0;j<=24;j++){const x=-.75+j/24*1.5;const y=0.12*Math.sin(j*.55+i*.9);pts.push(new THREE.Vector3(x,y,z+0.07*Math.cos(j*.55+i)));}const curve=new THREE.CatmullRomCurve3(pts);const mesh=new THREE.Mesh(new THREE.TubeGeometry(curve,32,.012,5,false),c);mesh.scale.copy(target.scale);mesh.position.copy(target.position);root.add(mesh);});}
-    if(part.parent==='brain'){
-      if(part.id==='brainstem'){blob([0,.35,0],[.5,.56,.48],color,2);tube([[0,.25,0],[.02,-.2,.04],[.0,-.72,.03]],.27,color);}
-      else if(part.id==='hippocampus'){tube([[-.9,-.1,0],[-.75,.45,0],[-.3,.65,.05],[.15,.5,0],[.48,.12,-.08],[.6,-.28,0]],.22,color);blob([-.9,-.1,0],[.23,.23,.24],color);blob([.6,-.28,0],[.22,.24,.22],color);}
-      else if(part.id==='corpus-callosum'){tube([[-1,-.05,0],[-.8,.3,0],[-.38,.55,0],[.15,.58,0],[.7,.35,0],[1,-.05,0]],.18,color);}
-      else if(part.id==='amygdala'){blob([0,0,0],[.62,.42,.38],color,5);blob([.42,.05,0],[.36,.3,.32],color,2);}
-      else if(part.id==='thalamus'){blob([-.27,0,0],[.48,.52,.45],color);blob([.27,0,0],[.48,.52,.45],color);}
-      else if(part.id==='hypothalamus'){blob([0,0,0],[.44,.34,.38],color);tube([[0,-.15,0],[0,-.5,0]],.1,color);}
-      else if(part.id==='cerebellum'){const b=blob([0,0,0],[.92,.57,.63],color,3);for(let i=0;i<8;i++){const y=-.38+i*.105;const pts=[];for(let j=0;j<17;j++){const x=-.7+j*.0875;pts.push([x,y+.04*Math.sin(j*.8+i),.40*Math.sqrt(Math.max(.05,1-(x/.95)**2))]);}tube(pts,.015,0x9a567f);}}
-      else {const main=blob([0,0,0],[part.id==='frontal'?.9:part.id==='temporal'?.88:1,part.id==='temporal'?.55:.68,.55],color,part.id.length);for(let i=0;i<5;i++){const z=-.38+i*.17;const pts=[];for(let j=0;j<20;j++){const x=-.7+j*.073;const y=.18*Math.sin(j*.5+i*.7);pts.push([x,y,z]);}tube(pts,.014,0x8b9db2);}}
-    }else if(part.parent==='heart'){
-      if(part.id.includes('valve')){const ring=new THREE.Mesh(new THREE.TorusGeometry(.75,.12,16,64),mat(color));root.add(ring);ring.rotation.x=.15;for(let i=0;i<3;i++){const leaflet=new THREE.Mesh(new THREE.SphereGeometry(1,24,16),mat(0xf2c6cd));leaflet.scale.set(.27,.43,.08);leaflet.position.set(.28*Math.cos(i*2*Math.PI/3),.18*Math.sin(i*2*Math.PI/3),.07);leaflet.rotation.z=i*2*Math.PI/3;root.add(leaflet);}tube([[0,.0,.04],[.0,.55,0],[0,.92,0]],.06,0xb75e75);}
-      else if(['aorta','pulmonary-artery','pulmonary-veins'].includes(part.id)){if(part.id==='aorta')tube([[0,-.9,0],[0,-.3,0],[.05,.15,0],[.45,.45,0],[.8,.35,0],[.95,.05,0]],.23,color);else if(part.id==='pulmonary-artery')tube([[0,-.75,0],[0,-.25,0],[.0,.15,0],[-.45,.55,0],[-.8,.64,0]],.19,color),tube([[0,.15,0],[.45,.52,.05],[.85,.58,.05]],.16,color);else {tube([[-.8,-.2,0],[-.3,-.05,0],[.1,.2,0],[.7,.25,0]],.12,color);tube([[-.8,.28,.1],[-.3,.17,.1],[.1,.2,.0],[.7,.35,0]],.12,color);}}
-      else {blob([0,0,0],[part.id.includes('ventricle')?.8:.68,part.id.includes('ventricle')?1.0:.68,.58],color,3);blob([0,.25,.42],[.24,.34,.10],0x8f3549,1);tube([[0,.55,0],[0,.85,0]],.12,color);}
-    }else if(part.parent==='male-reproductive'){
-      const tubeColor=0xd4a15d, tissueColor=color;
-      if(part.id==='testes'||part.id==='seminiferous-tubules'){
-        blob([0,0,0],[.64,.92,.55],tissueColor,8);
-        if(part.id==='seminiferous-tubules'){
-          for(let i=0;i<7;i++){const x=-.34+i*.11;const z=.12*Math.sin(i*.9);const pts=[];for(let j=0;j<28;j++){const a=j/27*Math.PI*5;pts.push([x+.12*Math.sin(a),-.68+j/27*1.36,z+.12*Math.cos(a)]);}tube(pts,.025,0xd1a65d);}
-        }else{
-          tube([[.42,.65,0],[.72,.48,.06],[.78,.12,.08],[.70,-.28,.07],[.45,-.62,.04]],.12,0xe4a8a0);
-        }
-      }else if(part.id==='epididymis'){
-        const pts=[];for(let i=0;i<70;i++){const t=i/69;pts.push([.22+.22*Math.sin(t*5.8),.92-t*1.85,.08*Math.cos(t*6)]);}tube(pts,.11,tissueColor);blob([.22,.94,0],[.18,.18,.17],tissueColor);
-      }else if(part.id==='vas-deferens'||part.id==='spermatic-cord'){
-        const pts=[[-.55,-.95,0],[-.34,-.58,.05],[-.18,-.16,.1],[-.34,.25,.08],[-.2,.68,.03],[.2,.95,0],[.64,.72,-.04]];tube(pts,part.id==='spermatic-cord'?.18:.085,part.id==='spermatic-cord'?0xc88b5c:tubeColor);if(part.id==='spermatic-cord'){tube(pts.map(([x,y,z])=>[x+.1,y,z+.08]),.035,0x9b6475);tube(pts.map(([x,y,z])=>[x-.1,y,z-.08]),.035,0x668fb7);}
-      }else if(part.id==='seminal-vesicles'){
-        for(const s of [-1,1]){blob([s*.48,.36,0],[.26,.42,.22],tissueColor,s);for(let i=0;i<4;i++){const y=.12+i*.15;tube([[s*.48,y,0],[s*(.65+i*.035),y+.08,.02],[s*(.72+i*.025),y+.18,.03]],.045,tissueColor);}}
-      }else if(part.id==='ejaculatory-ducts'){
-        for(const s of [-1,1])tube([[s*.66,.82,0],[s*.45,.55,.04],[s*.22,.24,.05],[0,-.1,.03]],.075,tissueColor);
-      }else if(part.id==='prostate'){
-        blob([0,0,0],[.78,.58,.58],tissueColor,3);const urethra=new THREE.Mesh(new THREE.TorusGeometry(.22,.055,12,48),mat(0xe8c99e));urethra.rotation.x=Math.PI/2;root.add(urethra);tube([[0,-.85,0],[0,-.25,0],[0,.2,0],[0,.72,0]],.07,0x6b9db7);
-      }else if(part.id==='bulbourethral-glands'){
-        for(const s of [-1,1]){blob([s*.48,0,0],[.23,.27,.22],tissueColor,s);tube([[s*.48,-.12,0],[s*.32,-.38,.02],[s*.12,-.66,.02]],.045,0xd1a76a);}
-      }else if(part.id==='urethra'){
-        tube([[0,-1.15,0],[0,-.68,.02],[0,-.18,.03],[.02,.24,.03],[.02,.72,.02],[0,1.05,0]],.12,0x6da6c1);
-      }else if(part.id==='penis'){
-        for(const s of [-1,1])blob([s*.22,0,0],[.18,1.0,.19],0x9d6171,s);
-        blob([0,-.05,.14],[.19,1.02,.17],0xc7797d);
-        blob([0,1.02,.12],[.28,.28,.25],0xd7929a);
-        tube([[0,-1.1,.3],[0,-.5,.3],[0,.2,.3],[0,.8,.3]],.035,0x6b9db7);
-      }else if(part.id==='corpora-cavernosa'){
-        for(const s of [-1,1]){blob([s*.24,0,0],[.18,1.15,.2],tissueColor,s);}
-      }else if(part.id==='corpus-spongiosum'){
-        blob([0,0,0],[.2,1.16,.19],tissueColor,4);blob([0,1.1,0],[.33,.29,.28],tissueColor,2);tube([[0,-1.0,.18],[0,-.3,.18],[0,.45,.18],[0,1,.12]],.045,0x638ea9);
-      }else if(part.id==='glans-penis'){
-        blob([0,0,0],[.5,.42,.43],tissueColor,2);blob([0,-.2,0],[.34,.3,.32],0xe6b1ac);
-      }else if(part.id==='scrotum'){
-        const outer=new THREE.Mesh(new THREE.SphereGeometry(1,36,26),new THREE.MeshStandardMaterial({color:tissueColor,roughness:.75,transparent:true,opacity:.42,side:THREE.DoubleSide}));outer.scale.set(.95,.82,.5);root.add(outer);blob([-.36,-.06,.04],[.34,.54,.35],0xc9828e);blob([.36,-.06,.04],[.34,.54,.35],0xc9828e);
-      }
-    }else if(part.parent==='lungs'){
-      if(part.id==='alveoli'){tube([[0,-1.0,0],[0,-.4,0],[0,.0,0]],.07,0x508fb0);for(let i=0;i<16;i++){const a=i*2.399, r=.42+(i%4)*.11;const p=[Math.cos(a)*r,Math.sin(a)*r*.8,.2*Math.sin(a*1.7)];tube([[0,-.1,0],p],.025,0x5a9fbd);blob(p,[.18,.18,.18],color,i);}}
-      else if(['bronchi','bronchioles'].includes(part.id)){const r=part.id==='bronchi'?.09:.045;tube([[0,-1,0],[0,-.45,0],[0,0,0]],r,color);for(let i=0;i<6;i++){const side=i%2?1:-1;const y=-.1+i*.19;const end=[side*(.35+i*.07),y+.23,0.05*(i%3)];tube([[0,y,0], [side*.18,y+.1,.02],end],r*(i<2?1:.7),color);if(part.id==='bronchioles')for(let j=1;j<=2;j++)tube([end,[end[0]+side*.18,end[1]+j*.08,.05*j]],.018,color);}}
-      else if(part.id==='diaphragm'){const verts=[],indices=[],n=32;for(let y=0;y<=n;y++)for(let x=0;x<=n;x++){const u=x/n*2-1,v=y/n*2-1;verts.push(u, -.45*(1-u*u)*(1-v*v)+.25, v*.72);}for(let y=0;y<n;y++)for(let x=0;x<n;x++){const a=y*(n+1)+x,b=a+1,c=a+n+1,d=c+1;indices.push(a,b,c,b,d,c);}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));g.setIndex(indices);g.computeVertexNormals();root.add(new THREE.Mesh(g,new THREE.MeshStandardMaterial({color,side:THREE.DoubleSide,roughness:.65})));}
-      else {const b=blob([0,0,0],[.68,.95,.48],color,part.id.length);b.rotation.z=part.id.startsWith('left')?-.13:.13; tube([[0,.88,0],[0,.48,0],[.12,.18,0]],.085,0x558dab);}
+    const part=anatomyPartCatalog.find(p=>p.id===host.dataset.partId)||(()=>{
+      const region=regions[host.dataset.regionKey];
+      return region?{id:host.dataset.regionKey,parent:'brain',regionKey:host.dataset.regionKey,name:region.name,en:region.english,diagram:'brain'}:null;
+    })();
+    if(!part)throw new Error('part metadata unavailable');
+    // Keep only genuine source-backed mesh assets; never generate procedural anatomy stand-ins.
+    if(part.parent==='male-reproductive'&&malePartMeshTargets[part.id]){
+      const [THREE,controlsMod]=await Promise.all([
+        import('https://cdn.jsdelivr.net/npm/three@0.170.0/+esm'),
+        import('https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/controls/OrbitControls.js/+esm')
+      ]);
+      const {OrbitControls}=controlsMod;
+      await renderMaleReproductivePart3D(host,part,THREE,OrbitControls);
+      return;
     }
-    const bounds=new THREE.Box3().setFromObject(root),center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3());root.position.sub(center);const maxDim=Math.max(size.x,size.y,size.z,1);camera.position.set(maxDim*1.55,maxDim*1.15,maxDim*2.3);camera.near=.01;camera.far=maxDim*30;camera.updateProjectionMatrix();controls.target.set(0,0,0);controls.update();
-    const reset=host.querySelector('[data-part3d-reset]');reset?.addEventListener('click',()=>{camera.position.set(maxDim*1.55,maxDim*1.15,maxDim*2.3);controls.target.set(0,0,0);controls.update();});const rotate=host.querySelector('[data-part3d-rotate]');rotate?.addEventListener('click',()=>{controls.autoRotate=!controls.autoRotate;rotate.textContent=controls.autoRotate?'إيقاف الدوران':'تشغيل الدوران';});
-    let raf=0,disposed=false;const render=()=>{if(disposed||!host.isConnected){cancelAnimationFrame(raf);renderer.dispose();controls.dispose();return;}controls.update();renderer.render(scene,camera);raf=requestAnimationFrame(render);};render();const resize=()=>{if(!host.isConnected)return;const w=Math.max(280,host.clientWidth),h=330;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();};resize();const ro=new ResizeObserver(resize);ro.observe(host);host._medoraPart3dCleanup=()=>{disposed=true;ro.disconnect();cancelAnimationFrame(raf);controls.dispose();renderer.dispose();};
+    host.innerHTML='<div class="part-viewer-poster"><b>نموذج تشريحي مستقل موثّق قيد الإضافة: '+safe(part.name)+'</b><span>أوقفنا الشكل التخطيطي البرمجي حتى لا يظهر على أنه نموذج تشريحي حقيقي. سيظهر هنا نموذج مصدرّي عند اعتماده.</span></div>';
   }
-
-  // Actual isolated anatomy meshes available in OrganUI's BodyParts3D-based GLB.
-  // The selected whole-system model and the existing testis viewer are preserved separately.
-  const malePartMeshTargets = Object.freeze({
-    prostate: ['prostate'],
-    'seminal-vesicles': ['seminal-vesicles'],
-    epididymis: ['epididymides'],
-    'vas-deferens': ['deferent-ducts'],
-    'corpora-cavernosa': ['corpora-cavernosa'],
-    'corpus-spongiosum': ['corpus-spongiosum'],
-    'glans-penis': ['glans-penis'],
-    urethra: ['urethra'],
-    penis: ['corpora-cavernosa', 'corpus-spongiosum', 'glans-penis']
-  });
-  const maleOrganUiModelUrl = 'https://cdn.jsdelivr.net/gh/organui/prostate-3d@204c67a54226a19868abd0a5e8449a7f82827bf9/public/models/prostate.glb';
-  const maleOrganUiCredit = 'BodyParts3D / Anatomography, © The Database Center for Life Science (DBCLS), adapted by OrganUI. Model-data license: CC BY-SA 2.1 Japan.';
 
   function malePartModelMarkup(part){
     const title=safe(part.name), en=safe(part.en);
@@ -1872,7 +1799,7 @@ html[data-theme="dark"] .topic-search-form,html[data-theme="dark"] .topic-source
     } else {
       selectedModel='';
     }
-    return `<section class="anatomy-panel part-model-first"><h3>المجسم التعليمي المستقل: ${title} <small dir="ltr">(${en})</small></h3><p>هذا المجسم الثلاثي الأبعاد التخطيطي مخصص للجزء الذي فتحته، ويمكن تدويره وتكبيره. بعده يمكنك فتح العارض التشريحي المرجعي الإضافي لمراجعة البنية في سياق الجهاز.</p><div class="standalone-model-host" data-medora-part3d data-part-id="${safe(part.id)}"><div class="part-viewer-poster"><b>جارٍ تجهيز المجسم الخاص بـ ${title}…</b><span>يتطلب اتصالًا بالإنترنت لتحميل مكتبة العرض.</span></div></div><p class="model-accuracy-note">المجسم المستقل هنا رسم ثلاثي الأبعاد تخطيطي تعليمي، وليس مسحًا تشريحيًا دقيقًا أو نموذجًا بالحجم الفعلي. العارض المرجعي الإضافي وروابط المصادر أدناه للمراجعة.</p>${selectedModel}</section>`;
+    return `<section class="anatomy-panel part-model-first"><h3>المجسم التشريحي: ${title} <small dir="ltr">(${en})</small></h3>${selectedModel||'<div class="part-viewer-poster"><b>نموذج مستقل قيد الإضافة</b><span>لم نعثر على نموذج مصدرّي مستقل موثّق لهذا الجزء.</span></div>'}</section>`;
   }
   function partModelMarkup(partOrRegion){
     const id=partOrRegion.id||partOrRegion.regionKey;
@@ -1903,6 +1830,48 @@ html[data-theme="dark"] .topic-search-form,html[data-theme="dark"] .topic-source
       return `<section class="anatomy-panel part-model-first">
         <h3>مجسم الأذين الأيمن قيد الإضافة</h3>
         <div class="part-viewer-poster"><b>الكود المرسل للرقم 13 لا يمثل الأذين الأيمن.</b><span>النموذج المرسل بعنوان LEFT HEART يحتوي على الأذين الأيسر والبطين الأيسر والأبهر وتفرعاته. لم أضعه هنا حتى لا نعرض تركيبًا تشريحيًا خاطئًا.</span></div>
+      </section>`;
+    }
+    if(id==='tricuspid-valve'){
+      return `<section class="anatomy-panel part-model-first">
+        <h3>المجسم التشريحي ثلاثي الأبعاد: الصمام ثلاثي الشرفات</h3>
+        <p>استكشف النموذج الحقيقي للصمام ثلاثي الشرفات بتدويره وتكبيره داخل العارض.</p>
+        <div class="sketchfab-cerebellum-shell"><div class="sketchfab-embed-wrapper">
+          <iframe title="Tricuspid Valve 3D model" loading="lazy" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" src="https://sketchfab.com/models/0642eefa765741f2af7ff9bbedac9c60/embed"></iframe>
+        </div></div>
+      </section>`;
+    }
+    if(id==='pulmonary-veins'){
+      return `<section class="anatomy-panel part-model-first">
+        <h3>المجسم ثلاثي الأبعاد: الأوردة الرئوية</h3>
+        <p>هذا نموذج منشور بعنوان Pulmonary Veins (Extensive Branching). يعرض داخل عارض Sketchfab المستضاف؛ لم يقدّم صاحب الصفحة وصفًا تشريحيًا تفصيليًا أو ترخيص تنزيل ظاهرًا، لذلك لا نعدّه حتى الآن مصدرًا مرخّصًا لإعادة الاستخدام أو التعديل خارج العارض.</p>
+        <div class="sketchfab-cerebellum-shell"><div class="sketchfab-embed-wrapper">
+          <iframe title="Pulmonary Veins Extensive Branching 3D model" loading="lazy" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" src="https://sketchfab.com/models/e26dde1d75fb47f5914f241d20f2bb17/embed"></iframe>
+        </div></div>
+      </section>`;
+    }
+    if(id==='aortic-valve'){
+      return `<section class="anatomy-panel part-model-first">
+        <h3>الصمام الأبهري — نحتاج نموذجًا مناسبًا للاستخدام التجاري</h3>
+        <div class="part-viewer-poster"><b>لم ندمج النموذج المرسل حتى الآن.</b><span>ترخيص النموذج الذي أرسلته CC BY-NC، أي للاستخدام غير التجاري فقط، كما يصفه صاحبه بأنه محاكاة تخطيطية لحركة الصمام وليست نموذجًا تشريحيًا تفصيليًا. نحتاج نموذجًا مرخصًا للاستخدام التجاري أو إذنًا كتابيًا من صاحبه.</span></div>
+      </section>`;
+    }
+    if(id==='pulmonary-artery'){
+      return `<section class="anatomy-panel part-model-first">
+        <h3>الشريان الرئوي — نحتاج نموذجًا تشريحيًا طبيعيًا</h3>
+        <div class="part-viewer-poster"><b>النموذج المرسل لا يمثل تشريحًا طبيعيًا للشريان الرئوي.</b><span>هو نموذج لحالة مرضية تُسمى تبدّل مواضع الشرايين الكبرى (Transposition of the Great Arteries)، كما أن ترخيصه CC BY-NC-SA. لذلك لم نستخدمه بدل النموذج الطبيعي للشريان الرئوي.</span></div>
+      </section>`;
+    }
+    if(id==='right-upper-lobe'){
+      return `<section class="anatomy-panel part-model-first">
+        <h3>الفص العلوي الأيمن للرئة — النموذج قيد التحقق</h3>
+        <div class="part-viewer-poster"><b>لم نعتمد كود Medical Model WP33 بعد.</b><span>عنوان النموذج وحده لا يوضح أي تركيب تشريحي يمثله، وتعذّر التحقق من معاينة صفحة النموذج وبياناته. لا نريد وضعه كفص من الرئة بالتخمين.</span></div>
+      </section>`;
+    }
+    if(id==='pulmonary-valve'){
+      return `<section class="anatomy-panel part-model-first">
+        <h3>الصمام الرئوي — نحتاج نموذجًا مستقلًا</h3>
+        <div class="part-viewer-poster"><b>لم نعثر على نموذج مستقل موثّق ومناسب حتى الآن.</b><span>لا نستخدم شكلًا تخطيطيًا بديلًا على أنه مجسم تشريحي حقيقي.</span></div>
       </section>`;
     }
     if(id==='cerebellum'){
