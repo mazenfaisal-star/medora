@@ -131,6 +131,7 @@
     const out = [];
     data.regions.forEach(function (region) {
       region.bones.forEach(function (bone) {
+        if (!bone.files || !bone.files[SUBJECT_ID] || bone.files[SUBJECT_ID].stl === undefined) return;
         const id = bone.id;
         let include = false;
         if (category.id === 'skull') include = region.id === 'SKULL';
@@ -222,7 +223,7 @@
   };
 
   const sectionCard = function (category) {
-    const count = boneRecords.filter(function (bone) { return bone.categoryId === category.id; }).length;
+    const count = manifest ? recordsForCategory(category, manifest).length : 0;
     return '<a class="skeletal-category-card" href="' + topicUrl(category.name) + '">' +
       '<span class="skeletal-card-icon" aria-hidden="true">' + ({skull:'◉',spine:'▤',thorax:'◇','upper-limb':'↗',pelvis:'⌂','lower-limb':'⇣'}[category.id] || '✦') + '</span>' +
       '<span class="skeletal-card-copy"><b>' + category.name + '</b><small dir="ltr">' + category.en + '</small><em>' + count + ' نماذج عظمية</em></span><span class="skeletal-arrow">↗</span></a>';
@@ -507,6 +508,7 @@
     isSystemQuery:isSystemQuery
   };
 
+  loadManifest().catch(function (error) { console.warn('Medora skeletal index unavailable:',error); });
   route();
 
   document.addEventListener('click',function (event) {
