@@ -185,9 +185,16 @@ ADDITIONAL RESPIRATORY AND MALE-REPRODUCTIVE MODEL REFERENCES — 15 NOVEMBER 20
    DOI: https://doi.org/10.57967/hf/10464
    Licence: Creative Commons Attribution 4.0 (CC BY 4.0). Credit Seyed Hamidreza Alavi and Malte Asseln, and cite the original Visible Human / University of Denver source work listed in the dataset README.
    Medora loads the STL bone meshes directly from the dataset for its regional and individual-bone viewers.
-   Known dataset limitations retained in Medora: cranial bones and maxilla are grouped; sacrum and coccyx are grouped; sternum is one mesh; costal cartilages are absent; hyoid and most small sesamoid bones are not included; hand and foot phalanges are grouped per digit in the current segmentation. Do not label these grouped files as separately segmented bones.
+   Known dataset limitations retained in the BoneHub-derived Medora regions: sacrum and coccyx are grouped; sternum is one mesh; costal cartilages are absent; hyoid and most small sesamoid bones are not included; hand and foot phalanges are grouped per digit in the current segmentation. BoneHub's own skull meshes group the cranium and maxilla, so Medora uses the Anatomio / Z-Anatomy skull study listed below for individually selectable skull bones. Do not label grouped files as separately segmented bones.
 
 8) Full human skeleton — “Human Skeleton 3D Model” by Dinendra Neyo on Sketchfab.
    Model page: https://sketchfab.com/3d-models/human-skeleton-3d-model-d04e251ee8a242fcb57db58f3989def4
    Embed: https://sketchfab.com/models/d04e251ee8a242fcb57db58f3989def4/embed
    The Sketchfab page identifies the model as a human skeleton and lists a Creative Commons Attribution (CC BY) licence. Credit Dinendra Neyo and retain the link to the original model page.
+
+9) Skull and facial bones — Anatomio regional study based on Z-Anatomy / DBCLS.
+   Regional model: https://anatomio.org/en/human/skull/
+   Individual structure pages use the pattern: https://anatomio.org/en/human/skull/structures/<structure-slug>/
+   The regional study exposes 22 individually selectable skull bones, as well as teeth and temporomandibular-joint discs. Teeth and discs are not counted as bones.
+   Licence: Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0). Credit Z-Anatomy / DBCLS and Anatomio, and retain the attribution and ShareAlike terms.
+   Source scope note: Anatomio states that original source placement is retained and that some joint contacts remain unvalidated; specialist anatomical review is pending. Medora labels this as an educational model, not a clinically validated model.
