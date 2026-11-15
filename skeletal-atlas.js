@@ -181,14 +181,17 @@
     const q = normalize(raw);
     if (!q) return null;
     let found = boneRecords.find(function (bone) {
-      return normalize(bone.name) === q || normalize(bone.en) === q || normalize(bone.id) === q;
+      const vertebra = bone.id.match(/^VERTEBRA_([CTL]\\d+)$/);
+      return normalize(bone.name) === q || normalize(bone.en) === q || normalize(bone.id) === q ||
+        !!(vertebra && normalize(vertebra[1]) === q);
     });
     if (found) return found;
     if (q.length < 5) return null;
     const hits = boneRecords.filter(function (bone) {
-      return [bone.name, bone.en, bone.id].some(function (term) {
+      const vertebra = bone.id.match(/^VERTEBRA_([CTL]\\d+)$/);
+      return [bone.name, bone.en, bone.id, vertebra ? vertebra[1] : ''].some(function (term) {
         const n = normalize(term);
-        return n.length >= 5 && (n.includes(q) || q.includes(n));
+        return n.length >= 3 && (n.includes(q) || q.includes(n));
       });
     });
     return hits.length === 1 ? hits[0] : null;
@@ -299,7 +302,7 @@
       '<div class="skeletal-full-model"><iframe title="Human Skeleton — full interactive 3D model" loading="lazy" frameborder="0" allowfullscreen allow="autoplay; fullscreen; xr-spatial-tracking" src="' + FULL_SKELETON_MODEL + '"></iframe></div>' +
       '<p class="skeletal-credit">نموذج Human Skeleton 3D Model بواسطة Dinendra Neyo على Sketchfab، بترخيص Creative Commons Attribution (CC BY). <a href="https://sketchfab.com/3d-models/human-skeleton-3d-model-d04e251ee8a242fcb57db58f3989def4" target="_blank" rel="noopener noreferrer">صفحة النموذج والترخيص ↗</a></p></section>' +
       '<section class="skeletal-sections-panel"><div class="topic-summary-head"><div><span class="topic-kicker">تقسيمات الهيكل العظمي</span><h2>استكشف الأقسام</h2><p>افتح القسم لعرض نموذجه الكامل، ثم اختر أي عظمة من القائمة.</p></div><span class="topic-tag">6 أقسام</span></div><div class="skeletal-category-grid">' + categories.map(sectionCard).join('') + '</div></section>' +
-      '<article class="topic-note skeletal-limit-note"><b>ملاحظة علمية:</b> النماذج مصدرها تقسيمات CT تعليمية. توجد بعض التراكيب مجمّعة في ملف واحد أو غير ممثلة، وتظهر هذه الحدود بوضوح في صفحة كل قسم.</article>' +
+      '<article class="topic-note skeletal-limit-note"><b>ملاحظة علمية:</b> النماذج مصدرها تقسيمات CT تعليمية. بعض التراكيب مجمّعة في ملف واحد أو غير ممثلة؛ من ذلك العظم اللامي ومعظم العظام السمسمانية الصغيرة، وتظهر حدود كل قسم بوضوح في صفحته.</article>' +
       sourceLinks();
   };
 
@@ -499,6 +502,21 @@
     if (category) { renderCategoryPage(category); return; }
     const bone = boneForQuery(query);
     if (bone) { renderBonePage(bone); return; }
+    const q = normalize(query);
+    if (q.length >= 3) {
+      const partialHits = boneRecords.filter(function (entry) {
+        const vertebra = entry.id.match(/^VERTEBRA_([CTL]\\d+)$/);
+        return [entry.name,entry.en,entry.id,vertebra ? vertebra[1] : ''].some(function (term) {
+          const n = normalize(term);
+          return n.length >= 3 && n.includes(q);
+        });
+      });
+      const categoryIds = Array.from(new Set(partialHits.map(function (entry) { return entry.categoryId; })));
+      if (categoryIds.length === 1) {
+        const parent = categories.find(function (entry) { return entry.id === categoryIds[0]; });
+        if (parent) { renderCategoryPage(parent); return; }
+      }
+    }
   };
 
   window.medoraSkeletalAtlas = {
