@@ -79,3 +79,27 @@ Attribution placement note:
 - The model viewer panels do not add a separate visible source-and-rights paragraph below each model, per the project UI preference.
 - Creator, model-page link and license metadata remain recorded centrally in this file. CC Attribution terms still require appropriate credit and a link to the license/source; do not remove this record or claim the models are Medora-created.
 - Before downloading, modifying, redistributing files or preparing a commercial release, recheck the live model-page license and its exact version/conditions.
+
+
+HEART AND PULMONARY MODEL SUBMISSIONS — 15 NOVEMBER 2026
+3) Tricuspid valve — Sketchfab model by VisibleHeartLabs.
+   Page: https://sketchfab.com/3d-models/tricuspid-valve-0642eefa765741f2af7ff9bbedac9c60
+   Embed: https://sketchfab.com/models/0642eefa765741f2af7ff9bbedac9c60/embed
+   Page metadata says: “This is the tricuspid valve from Human Heart 0536.”
+   License displayed on the Sketchfab page: CC Attribution. Preserve the creator credit and link to the source in this central record.
+
+4) Pulmonary veins (Extensive Branching) — Sketchfab model by victor.shahen97.
+   Page: https://sketchfab.com/3d-models/pulmonary-veins-extensive-branching-e26dde1d75fb47f5914f241d20f2bb17
+   Embed: https://sketchfab.com/models/e26dde1d75fb47f5914f241d20f2bb17/embed
+   The public page title identifies pulmonary veins, but the page provides no descriptive anatomy notes and no visible license field in the reviewed page. Medora uses only the official hosted Sketchfab viewer; no source file is downloaded, modified or redistributed. This model is not cleared for commercial exploitation beyond use of the platform embed; obtain rights-holder / platform confirmation before monetized launch.
+
+SUBMITTED BUT NOT INTEGRATED — RIGHTS OR ANATOMICAL MATCH DOES NOT FIT
+- Aortic Valve Animation by Soma3D:
+  https://sketchfab.com/3d-models/aortic-valve-animation-f4796ff9b5184a7da1fb81854e2d42b5
+  The model page describes it as a schematic simulation of aortic-valve movement and displays CC BY-NC. Not integrated in Medora because the project may be commercial and the license is non-commercial; it is also schematic rather than a detailed anatomical model.
+- Transposition of the Great Arteries, Long Axis by E-learning UMCG:
+  https://sketchfab.com/3d-models/transposition-of-the-great-arteries-long-axis-f7c8acca3614485499af11a01e52f89d
+  This shows a pathological congenital condition, not normal pulmonary-artery anatomy. The displayed license is CC BY-NC-SA. Not integrated as the normal pulmonary artery model.
+- Medical Model WP33 by MIRAI3D:
+  https://sketchfab.com/3d-models/medical-model-wp33-bb4c54f56770467aaa9f06581b540eab
+  The model page could not be inspected in this review and its generic title does not establish which anatomical part it depicts. Not assigned to the right upper lung lobe until the asset content and license are verified.
