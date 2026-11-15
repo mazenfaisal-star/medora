@@ -209,9 +209,10 @@
       }
     });
     boneRecords.filter(function (bone) {
-      return [bone.name, bone.en, bone.id].some(function (term) {
+      const vertebra = bone.id.match(/^VERTEBRA_([CTL]\\d+)$/);
+      return [bone.name, bone.en, bone.id, vertebra ? vertebra[1] : ''].some(function (term) {
         const n = normalize(term);
-        return n === q || (q.length >= 4 && n.includes(q));
+        return !!n && (n === q || (q.length >= 2 && n.includes(q)));
       });
     }).slice(0, 8).forEach(function (bone) {
       hits.push({type:'bone', id:bone.id, name:bone.name, en:bone.en, description:boneInfo(bone.id).summary});
