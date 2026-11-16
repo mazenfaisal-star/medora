@@ -233,12 +233,17 @@
     if (!q) return [];
     const hits = [];
     if (isSystemQuery(query)) hits.push({type:'system', id:'skeletal-system', name:'الجهاز الهيكلي', en:'Skeletal system', description:'استكشف الهيكل العظمي الكامل ثم الأقسام الستة والعظام المكوّنة لكل قسم.'});
+    let matchedCategory = false;
     categories.forEach(function (category) {
       const terms = [category.name, category.en].concat(category.aliases);
       if (terms.some(function (term) { const n = normalize(term); return n === q || (q.length >= 4 && (n.includes(q) || q.includes(n))); })) {
         hits.push({type:'category', id:category.id, name:category.name, en:category.en, description:category.description});
+        matchedCategory = true;
       }
     });
+    // A section query should return the section only. Do not flood the global
+    // search panel with every bone in that section or start any 3D downloads.
+    if (matchedCategory || isSystemQuery(query)) return hits.slice(0, 10);
     boneRecords.filter(function (bone) {
       const vertebra = bone.id.match(/^VERTEBRA_([CTL]\d+)$/);
       return [bone.name, bone.en, bone.id, vertebra ? vertebra[1] : ''].some(function (term) {
@@ -292,7 +297,7 @@
   };
 
   const makeViewerMarkup = function (kind, id) {
-    if (kind === 'category' && id === 'skull') return '<div class="skeletal-external-viewer"><iframe title="Skull bones — 22 individually selectable structures" loading="lazy" allow="fullscreen; xr-spatial-tracking" src="https://anatomio.org/en/human/skull/"></iframe></div><p class="skeletal-credit">عارض Z-Anatomy عبر Anatomio · 22 عظمة قحفية ووجهية قابلة للاختيار والعزل. الترخيص CC BY-SA 4.0. <a href="https://anatomio.org/en/human/skull/" target="_blank" rel="noopener noreferrer">فتح العارض الأصلي ↗</a></p>';
+    if (kind === 'category' && id === 'skull') return '<div class="skeletal-viewer-wrap"><div class="skeletal-viewer" data-skeletal-viewer data-view-kind="category" data-view-id="skull"><div class="skeletal-viewer-loading"><b>جارٍ تجهيز نموذج الجمجمة…</b><span>يتم تحميل ملفات الجمجمة من مصدر العظام.</span></div></div><div class="skeletal-viewer-tools"><button type="button" data-skeletal-reset>إعادة ضبط العرض</button><button type="button" data-skeletal-rotate>إيقاف الدوران</button><span data-skeletal-status role="status">يتطلب عرض المجسم اتصالًا بالإنترنت.</span></div></div><p class="skeletal-credit">النموذج ثلاثي الأبعاد يعرض ملفات المصدر المتاحة للجمجمة، بينما قائمة العظام أدناه مرجع تعليمي تفصيلي. <a href="https://anatomio.org/en/human/skull/" target="_blank" rel="noopener noreferrer">فتح مرجع Z-Anatomy الخارجي ↗</a></p>';
     return '<div class="skeletal-viewer-wrap"><div class="skeletal-viewer" data-skeletal-viewer data-view-kind="' + kind + '" data-view-id="' + id + '">' +
       '<div class="skeletal-viewer-loading"><b>جارٍ تجهيز النموذج التشريحي…</b><span>يتم تحميل ملفات العظام عند فتح هذه الصفحة فقط.</span></div></div>' +
       '<div class="skeletal-viewer-tools"><button type="button" data-skeletal-reset>إعادة ضبط العرض</button><button type="button" data-skeletal-rotate>إيقاف الدوران</button><span data-skeletal-status role="status">يتطلب عرض المجسم اتصالًا بالإنترنت.</span></div></div>';
@@ -365,7 +370,7 @@
     if (!content) return;
     pageTitle(bone.name, bone.en + ' — نموذج ثلاثي الأبعاد مستقل وشرح تشريحي مختصر.');
     const individualModel = bone.sourceType === 'anatomio'
-      ? '<div class="skeletal-external-viewer"><iframe title="' + bone.en + ' — interactive 3D model" loading="lazy" allow="fullscreen; xr-spatial-tracking" src="https://anatomio.org/en/human/skull/structures/' + bone.slug + '/"></iframe></div><p class="skeletal-credit">نموذج تشريحي مستقل من Z-Anatomy عبر Anatomio · CC BY-SA 4.0. <a href="https://anatomio.org/en/human/skull/structures/' + bone.slug + '/" target="_blank" rel="noopener noreferrer">فتح صفحة العظمة الأصلية ↗</a></p>'
+      ? makeViewerMarkup('category', 'skull') + '<p class="skeletal-credit">ملف المصدر المفتوح لا يفصل هذه العظمة كملف STL مستقل؛ يظهر هنا نموذج الجمجمة المتاح مع مرجع تفصيلي للعظمة. <a href="https://anatomio.org/en/human/skull/structures/' + bone.slug + '/" target="_blank" rel="noopener noreferrer">فتح مرجع العظمة في Z-Anatomy ↗</a></p>'
       : makeViewerMarkup('bone', bone.id);
     content.innerHTML =
       '<section class="skeletal-page-intro"><span class="topic-kicker">عظمة منفردة · ' + category.name + '</span><h2>' + bone.name + ' <small dir="ltr">' + bone.en + '</small></h2>' +
@@ -403,11 +408,18 @@
         const bone = boneRecords.find(function (entry) { return entry.id === id; });
         if (bone) {
           const region = manifest.regions.find(function (entry) { return entry.id === bone.regionId; });
-          items = [{id:bone.id,regionId:bone.regionId,file:bone.id}];
+          items = [{id:bone.id,regionId:bone.regionId,file:(manifest.regions.find(function (entry) { return entry.id === bone.regionId; }).bones.find(function (entry) { return entry.id === bone.id; }).files[SUBJECT_ID].file || bone.id)}];
         }
       } else {
         const category = categories.find(function (entry) { return entry.id === id; });
-        if (category) items = recordsForCategory(category, manifest).map(function (bone) { return {id:bone.id,regionId:bone.regionId,file:bone.id}; });
+        if (category && id === 'skull') {
+          const skullRegion = manifest.regions.find(function (entry) { return entry.id === 'SKULL'; });
+          if (skullRegion) items = skullRegion.bones.filter(function (bone) {
+            return bone.files && bone.files[SUBJECT_ID] && bone.files[SUBJECT_ID].stl !== undefined;
+          }).map(function (bone) { return {id:bone.id,regionId:skullRegion.id,file:bone.files[SUBJECT_ID].file || bone.id}; });
+        } else if (category) {
+          items = recordsForCategory(category, manifest).map(function (bone) { return {id:bone.id,regionId:bone.regionId,file:bone.id}; });
+        }
       }
       if (!items.length) throw new Error('لم يتم العثور على ملفات العظام لهذا القسم.');
       setStatus('جارٍ تحميل 0 من ' + items.length + ' نموذجًا عظميًا…');
@@ -459,7 +471,9 @@
           await loadOne(item);
         }
       };
-      await Promise.all(Array.from({length:Math.min(4,items.length)},worker));
+      // Keep concurrent downloads modest: each STL can be large, and 4 parallel
+      // requests often stall on slower connections. Every file is still attempted.
+      await Promise.all(Array.from({length:Math.min(2,items.length)},worker));
       if (!root.children.length) throw new Error('لم تنجح عملية تحميل ملفات المجسم. تحقق من اتصال الإنترنت ثم أعد تحميل الصفحة.');
       const bounds = new THREE.Box3().setFromObject(root);
       const center = bounds.getCenter(new THREE.Vector3());
@@ -507,7 +521,9 @@
         controls.update();
         renderer.render(scene,camera);
       });
-      setStatus('النموذج جاهز. اسحب للتدوير، واستخدم عجلة الفأرة أو القرص للتكبير. اضغط على عظمة داخل نموذج القسم لفتح صفحتها المستقلة.' + (failed ? ' بعض النماذج لم تُحمّل (' + failed + ').' : ''));
+      setStatus(failed
+        ? 'اكتمل التحميل جزئيًا: نجح ' + (items.length - failed) + ' من ' + items.length + ' نموذجًا، وتعذّر ' + failed + '. أعد تحميل الصفحة للمحاولة مرة أخرى.'
+        : 'اكتمل تحميل جميع النماذج (' + items.length + '). اسحب للتدوير واستخدم عجلة الفأرة أو القرص للتكبير. اضغط على عظمة لفتح صفحتها المستقلة.');
       host._medoraSkeletonCleanup = function () {
         renderer.setAnimationLoop(null);
         observer.disconnect();
