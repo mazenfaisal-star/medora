@@ -590,6 +590,20 @@
   loadManifest().catch(function (error) { console.warn('Medora skeletal index unavailable:',error); });
   route();
 
+  // Keep the browser tab title in the same language as the visible page.
+  // The main language toggle emits this event without rebuilding or reloading 3D models.
+  document.addEventListener('medora:languagechange', function () {
+    const query = new URLSearchParams(window.location.search).get('q') || '';
+    const category = categoryForQuery(query);
+    const bone = boneForQuery(query);
+    const isEnglish = document.documentElement.lang === 'en';
+    const title = category ? (isEnglish ? category.en : category.name)
+      : bone ? (isEnglish ? bone.en : bone.name)
+      : isSystemQuery(query) ? (isEnglish ? 'Skeletal system' : 'الجهاز الهيكلي')
+      : 'Medora';
+    document.title = title + ' | Medora';
+  });
+
   document.addEventListener('click',function (event) {
     const link = event.target.closest('[data-skeletal-open]');
     if (!link) return;
