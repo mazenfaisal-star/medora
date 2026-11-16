@@ -451,19 +451,28 @@
       const loadOne = async function (item) {
         const url = HF_DATASET + encodeURIComponent(manifest.revision || 'main') + '/' +
           manifest.root + '/Mesh/' + SUBJECT_ID + '/' + item.regionId + '/' + item.file + '.stl';
-        try {
-          const geometry = await loader.loadAsync(url);
+        let geometry = null;
+        let lastError = null;
+        for (let attempt = 1; attempt <= 3 && !geometry; attempt++) {
+          try {
+            geometry = await loader.loadAsync(url);
+          } catch (error) {
+            lastError = error;
+            if (attempt < 3) await new Promise(function (resolve) { setTimeout(resolve, 450 * attempt); });
+          }
+        }
+        if (geometry) {
           geometry.computeVertexNormals();
-          const material = new THREE.MeshStandardMaterial({color:palette[loaded % palette.length],roughness:0.76,metalness:0.02});
+          const material = new THREE.MeshStandardMaterial({color:palette[(loaded - failed) % palette.length],roughness:0.76,metalness:0.02});
           const mesh = new THREE.Mesh(geometry,material);
           mesh.userData.boneId = item.id;
           root.add(mesh);
-        } catch (error) {
+        } else {
           failed++;
-          console.warn('Medora bone model failed to load:', item.id, error);
+          console.warn('Medora bone model failed after 3 attempts:', item.id, lastError);
         }
         loaded++;
-        setStatus('تم تحميل ' + (loaded - failed) + ' من ' + items.length + ' نموذجًا عظميًا' + (failed ? ' · تعذّر تحميل ' + failed : '') + '…');
+        setStatus('تمت معالجة ' + loaded + ' من ' + items.length + ' نموذجًا · نجح ' + (loaded - failed) + (failed ? ' · تعذّر ' + failed : '') + '…');
       };
       const worker = async function () {
         while (next < items.length) {
@@ -473,7 +482,7 @@
       };
       // Keep concurrent downloads modest: each STL can be large, and 4 parallel
       // requests often stall on slower connections. Every file is still attempted.
-      await Promise.all(Array.from({length:Math.min(2,items.length)},worker));
+      await Promise.all(Array.from({length:Math.min(3,items.length)},worker));
       if (!root.children.length) throw new Error('لم تنجح عملية تحميل ملفات المجسم. تحقق من اتصال الإنترنت ثم أعد تحميل الصفحة.');
       const bounds = new THREE.Box3().setFromObject(root);
       const center = bounds.getCenter(new THREE.Vector3());
