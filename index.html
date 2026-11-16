@@ -1486,6 +1486,7 @@ html[data-theme="dark"] .topic-search-form,html[data-theme="dark"] .topic-source
     if(typeof selectRegion === 'function' && typeof selectedRegionKey !== 'undefined') selectRegion(selectedRegionKey,false,false);
     if(typeof renderSavedItems === 'function') renderSavedItems();
     applyLanguage();
+    document.dispatchEvent(new CustomEvent('medora:languagechange',{detail:{language:activeLanguage}}));
   });
   document.getElementById('themeToggle')?.addEventListener('click',()=>setTimeout(updateAttributes,0));
   document.getElementById('toggleRotate')?.addEventListener('click',()=>setTimeout(updateAttributes,0));
