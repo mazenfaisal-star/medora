@@ -596,11 +596,14 @@
     const query = new URLSearchParams(window.location.search).get('q') || '';
     const category = categoryForQuery(query);
     const bone = boneForQuery(query);
+    const systemPage = isSystemQuery(query);
+    // This module is loaded on every Medora page; leave non-skeletal page titles
+    // to their own route when the site language changes.
+    if (!category && !bone && !systemPage) return;
     const isEnglish = document.documentElement.lang === 'en';
     const title = category ? (isEnglish ? category.en : category.name)
       : bone ? (isEnglish ? bone.en : bone.name)
-      : isSystemQuery(query) ? (isEnglish ? 'Skeletal system' : 'الجهاز الهيكلي')
-      : 'Medora';
+      : (isEnglish ? 'Skeletal system' : 'الجهاز الهيكلي');
     document.title = title + ' | Medora';
   });
 
