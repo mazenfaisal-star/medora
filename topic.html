@@ -1480,6 +1480,12 @@ html[data-theme="dark"] .topic-search-form,html[data-theme="dark"] .topic-source
     "استكشف الهيكل العظمي الكامل ثم الأقسام الستة والعظام المكوّنة لكل قسم.":"Explore the complete human skeleton, then the six sections and the bones in each section."
   });
 
+  Object.assign(medoraEnglish,{
+    "الجهاز الهيكلي والعظام":"Skeletal system and bones",
+    "عظمة · افتح النموذج والشرح":"Bone · Open 3D model and explanation",
+    "قسم تشريحي · افتح النموذج الكامل":"Anatomical section · Open the full model"
+  });
+
   const originalText = new WeakMap();
   let activeLanguage = 'ar';
   try{activeLanguage=localStorage.getItem('medoraLanguage')==='en'?'en':'ar'}catch(e){}
