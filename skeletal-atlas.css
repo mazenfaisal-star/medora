@@ -58,3 +58,85 @@ html[data-theme="dark"] .skeletal-model-note{background:rgba(60,130,190,.13);col
  .skeletal-external-viewer{height:390px}
  .skeletal-viewer-tools{align-items:flex-start}
 }
+
+
+/* Accessible dark theme for every skeletal-atlas surface and control. */
+html[data-theme="dark"] .skeletal-page-intro,
+html[data-theme="dark"] .skeletal-sections-panel,
+html[data-theme="dark"] .skeletal-bones-panel,
+html[data-theme="dark"] .skeletal-bone-group,
+html[data-theme="dark"] .skeletal-bone-detail{
+  background:#15263a!important;
+  border-color:#3a526e!important;
+  color:#eaf2ff!important;
+}
+html[data-theme="dark"] .skeletal-page-intro h2,
+html[data-theme="dark"] .skeletal-sections-panel h2,
+html[data-theme="dark"] .skeletal-bones-panel h2,
+html[data-theme="dark"] .skeletal-group-heading h3,
+html[data-theme="dark"] .skeletal-bone-detail h3,
+html[data-theme="dark"] .skeletal-card-copy b,
+html[data-theme="dark"] .skeletal-bone-card b,
+html[data-theme="dark"] .skeletal-sources b{
+  color:#f0f6ff!important;
+}
+html[data-theme="dark"] .skeletal-page-intro p,
+html[data-theme="dark"] .skeletal-sections-panel p,
+html[data-theme="dark"] .skeletal-bones-panel p,
+html[data-theme="dark"] .skeletal-bone-card em,
+html[data-theme="dark"] .skeletal-group-heading span,
+html[data-theme="dark"] .skeletal-credit,
+html[data-theme="dark"] .skeletal-sources,
+html[data-theme="dark"] .skeletal-card-copy small,
+html[data-theme="dark"] .skeletal-viewer-tools span{
+  color:#c2d2e6!important;
+}
+html[data-theme="dark"] .skeletal-category-card,
+html[data-theme="dark"] .skeletal-bone-card,
+html[data-theme="dark"] .global-skeletal-results .skeletal-search-hit{
+  background:#1a3048!important;
+  border-color:#405c79!important;
+  color:#edf4ff!important;
+}
+html[data-theme="dark"] .skeletal-card-icon{
+  background:#254362!important;
+  color:#a8e5de!important;
+}
+html[data-theme="dark"] .skeletal-arrow,
+html[data-theme="dark"] .skeletal-navigation a,
+html[data-theme="dark"] .skeletal-credit a,
+html[data-theme="dark"] .skeletal-sources a{
+  color:#80e2d8!important;
+}
+html[data-theme="dark"] .skeletal-viewer{
+  background:radial-gradient(circle at 50% 36%,#243b55,#111e30 78%)!important;
+  border-color:#405a78!important;
+}
+html[data-theme="dark"] .skeletal-viewer-loading{
+  background:transparent!important;
+  color:#e2edfa!important;
+}
+html[data-theme="dark"] .skeletal-viewer-loading b,
+html[data-theme="dark"] .skeletal-viewer-loading span{
+  color:#e2edfa!important;
+}
+html[data-theme="dark"] .skeletal-viewer-tools button{
+  background:#203a55!important;
+  border-color:#4a6888!important;
+  color:#f1f6ff!important;
+}
+html[data-theme="dark"] .skeletal-model-note,
+html[data-theme="dark"] .skeletal-limit-note{
+  background:#1b344b!important;
+  border:1px solid #405c78!important;
+  color:#d5e4f5!important;
+}
+html[data-theme="dark"] .skeletal-full-model,
+html[data-theme="dark"] .skeletal-external-viewer{
+  background:#111f31!important;
+  border-color:#405a78!important;
+}
+html[data-theme="dark"] .skeletal-page-intro [style*="color:"],
+html[data-theme="dark"] .skeletal-bones-panel [style*="color:"]{
+  color:#c2d2e6!important;
+}
